@@ -20,7 +20,7 @@ namespace Email_API
     {
         private static ConcurrentQueue<Email> writeQueue = new ConcurrentQueue<Email>();
         private static ConcurrentQueue<MyTask<string, int?>> readQueue = new ConcurrentQueue<MyTask<string, int?>>();
-        private static ConcurrentQueue<Email> emailQueue = new ConcurrentQueue<Email>();
+        private static BlockingCollection<Email> emailQueue = new BlockingCollection<Email>();
         private static Boolean alive = true;
         private static List<Thread> tasks = new List<Thread>();
         private static string ConnectionString;
@@ -52,16 +52,15 @@ namespace Email_API
         {
             while (alive)
             {
-                if (!emailQueue.IsEmpty)
-                {
-                    Email data;
-                    emailQueue.TryDequeue(out data);
+               //if (!emailQueue.IsEmpty)
+                //{
+                    Email data = emailQueue.Take();
                     while (data != null)
                     {
                         AddEmail(data);
+                        data = emailQueue.Take();
                     }
-                }
-                Thread.Sleep(500);
+                //}
             }
         }
 
@@ -155,7 +154,7 @@ namespace Email_API
 
         public static void SendEmail(Email email)
         {
-            emailQueue.Enqueue(email);
+            emailQueue.Add(email);
         }
 
         public static void AddEmail(Email email)
