@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doc>
+<assembly><name>FsToolkit.ErrorHandling</name></assembly>
+<members>
+<member name="M:FsToolkit.ErrorHandling.Result.zip``3(Microsoft.FSharp.Core.FSharpResult{``0,``1},Microsoft.FSharp.Core.FSharpResult{``2,``1})">
+<summary>
+ Takes two results and returns a tuple of the pair
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.Result.valueOr``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},Microsoft.FSharp.Core.FSharpResult{``1,``0})">
+<summary>
+ Returns the Ok value or runs the specified function over the error value.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.Result.sequenceAsync``2(Microsoft.FSharp.Core.FSharpResult{Microsoft.FSharp.Control.FSharpAsync{``0},``1})">
+<summary>
+ Converts a Result&lt;Async&lt;_&gt;,_&gt; to an Async&lt;Result&lt;_,_&gt;&gt;
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.Result.teeError``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpResult{``1,``0})">
+<summary>
+ If the result is Error, executes the function on the Error value. Passes
+ through the input value.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.Result.tee``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpResult{``0,``1})">
+<summary>
+ If the result is Ok, executes the function on the Ok value. Passes through
+ the input value.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.Result.teeErrorIf``2(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpResult{``1,``0})">
+<summary>
+ If the result is Error and the predicate returns true, executes the
+ function on the Error value. Passes through the input value.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.Result.teeIf``2(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpResult{``0,``1})">
+<summary>
+ If the result is Ok and the predicate returns true, executes the function
+ on the Ok value. Passes through the input value.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.Result.ignoreError``1(Microsoft.FSharp.Core.FSharpResult{Microsoft.FSharp.Core.Unit,``0})">
+<summary>
+ Same as defaultValue for a result where the Ok value is unit. The name
+ describes better what is actually happening in this case.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.Result.defaultWith``2(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,``0},Microsoft.FSharp.Core.FSharpResult{``0,``1})">
+<summary>
+ Returns the contained value if Ok, otherwise evaluates ifErrorThunk and
+ returns the result.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.Result.defaultValue``2(``0,Microsoft.FSharp.Core.FSharpResult{``0,``1})">
+<summary>
+ Returns the contained value if Ok, otherwise returns ifError.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.Result.withError``2(``0,Microsoft.FSharp.Core.FSharpResult{``1,Microsoft.FSharp.Core.Unit})">
+<summary>
+ Replaces a unit error value with a custom error value. Safer than setError
+ since you&apos;re not losing any information.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.Result.setError``3(``0,Microsoft.FSharp.Core.FSharpResult{``1,``2})">
+<summary>
+ Replaces an error value with a custom error value.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.Result.requireHead``2(``0,System.Collections.Generic.IEnumerable{``1})">
+<summary>
+ Returns the first item of the sequence if it exists, or the specified
+ error if the sequence is empty
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.Result.requireNotEmpty``2(``0,System.Collections.Generic.IEnumerable{``1})">
+<summary>
+ Returns the specified error if the sequence is empty, or Ok if not.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.Result.requireEmpty``2(``0,System.Collections.Generic.IEnumerable{``1})">
+<summary>
+ Returns Ok if the sequence is empty, or the specified error if not.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.Result.requireEqual``2(``0,``0,``1)">
+<summary>
+ Returns Ok if the two values are equal, or the specified error if not.
+ Same as requireEqualTo, but with a signature that fits normal function
+ application better than piping.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.Result.requireEqualTo``2(``0,``1,``0)">
+<summary>
+ Returns Ok if the two values are equal, or the specified error if not.
+ Same as requireEqual, but with a signature that fits piping better than
+ normal function application.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.Result.requireNotNull``2(``0,``1)">
+<summary>
+ Converts a nullable value into a Result, using the given error if null
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.Result.requireNone``2(``0,Microsoft.FSharp.Core.FSharpOption{``1})">
+<summary>
+ Converts an Option to a Result, using the given error if Some.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.Result.requireSome``2(``0,Microsoft.FSharp.Core.FSharpOption{``1})">
+<summary>
+ Converts an Option to a Result, using the given error if None.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.Result.requireFalse``1(``0,System.Boolean)">
+<summary>
+ Returns the specified error if the value is true.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.Result.requireTrue``1(``0,System.Boolean)">
+<summary>
+ Returns the specified error if the value is false.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.Result.ignore``2(Microsoft.FSharp.Core.FSharpResult{``0,``1})">
+<summary>
+ Replaces the wrapped value with unit
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.ResultCEChoiceExtensions.ResultBuilder.Source``2(FsToolkit.ErrorHandling.ResultCE.ResultBuilder,Microsoft.FSharp.Core.FSharpChoice{``0,``1})">
+ <summary>
+ Method lets us transform data types into our internal representation.
+ </summary>
+ <returns></returns>
+</member>
+<member name="M:FsToolkit.ErrorHandling.ResultCEExtensions.ResultBuilder.Source``2(FsToolkit.ErrorHandling.ResultCE.ResultBuilder,``0)">
+ <summary>
+ Needed to allow `for..in` and `for..do` functionality
+ </summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.ResultCE.ResultBuilder.Source``2(Microsoft.FSharp.Core.FSharpResult{``0,``1})">
+ <summary>
+ Method lets us transform data types into our internal representation.  This is the identity method to recognize the self type.
+ 
+ See https://stackoverflow.com/questions/35286541/why-would-you-use-builder-source-in-a-custom-computation-expression-builder
+ </summary>
+ <param name="result"></param>
+ <returns></returns>
+</member>
+<member name="M:FsToolkit.ErrorHandling.ResultOption.ignore``2(Microsoft.FSharp.Core.FSharpResult{Microsoft.FSharp.Core.FSharpOption{``0},``1})">
+<summary>
+ Replaces the wrapped value with unit
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.Async.zip``2(Microsoft.FSharp.Control.FSharpAsync{``0},Microsoft.FSharp.Control.FSharpAsync{``1})">
+<summary>
+ Takes two asyncs and returns a tuple of the pair
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResult.zip``3(Microsoft.FSharp.Control.FSharpAsync{Microsoft.FSharp.Core.FSharpResult{``0,``1}},Microsoft.FSharp.Control.FSharpAsync{Microsoft.FSharp.Core.FSharpResult{``2,``1}})">
+<summary>
+ Takes two results and returns a tuple of the pair
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResult.teeErrorIf``2(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Control.FSharpAsync{Microsoft.FSharp.Core.FSharpResult{``1,``0}})">
+<summary>
+ If the async-wrapped result is Error and the predicate returns true,
+ executes the function on the Error value. Passes through the input value.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResult.teeError``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Control.FSharpAsync{Microsoft.FSharp.Core.FSharpResult{``1,``0}})">
+<summary>
+ If the async-wrapped result is Error, executes the function on the Error
+ value. Passes through the input value.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResult.teeIf``2(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Control.FSharpAsync{Microsoft.FSharp.Core.FSharpResult{``0,``1}})">
+<summary>
+ If the async-wrapped result is Ok and the predicate returns true, executes
+ the function on the Ok value. Passes through the input value.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResult.tee``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Control.FSharpAsync{Microsoft.FSharp.Core.FSharpResult{``0,``1}})">
+<summary>
+ If the async-wrapped result is Ok, executes the function on the Ok value.
+ Passes through the input value.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResult.ignoreError``1(Microsoft.FSharp.Control.FSharpAsync{Microsoft.FSharp.Core.FSharpResult{Microsoft.FSharp.Core.Unit,``0}})">
+<summary>
+ Same as defaultValue for a result where the Ok value is unit. The name
+ describes better what is actually happening in this case.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResult.defaultWith``2(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,``0},Microsoft.FSharp.Control.FSharpAsync{Microsoft.FSharp.Core.FSharpResult{``0,``1}})">
+<summary>
+ Extracts the contained value of an async-wrapped result if Ok, otherwise
+ evaluates ifErrorThunk and uses the result.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResult.defaultValue``2(``0,Microsoft.FSharp.Control.FSharpAsync{Microsoft.FSharp.Core.FSharpResult{``0,``1}})">
+<summary>
+ Extracts the contained value of an async-wrapped result if Ok, otherwise
+ uses ifError.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResult.withError``2(``0,Microsoft.FSharp.Control.FSharpAsync{Microsoft.FSharp.Core.FSharpResult{``1,Microsoft.FSharp.Core.Unit}})">
+<summary>
+ Replaces a unit error value of an async-wrapped result with a custom
+ error value. Safer than setError since you&apos;re not losing any information.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResult.setError``3(``0,Microsoft.FSharp.Control.FSharpAsync{Microsoft.FSharp.Core.FSharpResult{``1,``2}})">
+<summary>
+ Replaces an error value of an async-wrapped result with a custom error
+ value.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResult.requireHead``3(``0,Microsoft.FSharp.Control.FSharpAsync{``1})">
+<summary>
+ Returns the first item of the async-wrapped sequence if it exists, or the specified
+ error if the sequence is empty
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResult.requireNotEmpty``3(``0,Microsoft.FSharp.Control.FSharpAsync{``1})">
+<summary>
+ Returns Ok if the async-wrapped sequence is not-empty, or the specified error if not.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResult.requireEmpty``3(``0,Microsoft.FSharp.Control.FSharpAsync{``1})">
+<summary>
+ Returns Ok if the async-wrapped sequence is empty, or the specified error if not.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResult.requireEqualTo``2(``0,``1,Microsoft.FSharp.Control.FSharpAsync{``0})">
+<summary>
+ Returns Ok if the two values are equal, or the specified error if not.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResult.requireEqual``2(``0,Microsoft.FSharp.Control.FSharpAsync{``0},``1)">
+<summary>
+ Returns Ok if the async-wrapped value and the provided value are equal, or the specified error if not.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResult.requireFalse``1(``0,Microsoft.FSharp.Control.FSharpAsync{System.Boolean})">
+<summary>
+ Returns the specified error if the async-wrapped value is true.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResult.requireTrue``1(``0,Microsoft.FSharp.Control.FSharpAsync{System.Boolean})">
+<summary>
+ Returns the specified error if the async-wrapped value is false.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResult.ignore``2(Microsoft.FSharp.Control.FSharpAsync{Microsoft.FSharp.Core.FSharpResult{``0,``1}})">
+<summary>
+ Replaces the wrapped value with unit
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResultCEExtensions.AsyncResultBuilder.Source``1(FsToolkit.ErrorHandling.AsyncResultCE.AsyncResultBuilder,System.Threading.Tasks.Task)">
+ <summary>
+ Method lets us transform data types into our internal representation.
+ </summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResultCEExtensions.AsyncResultBuilder.Source``2(FsToolkit.ErrorHandling.AsyncResultCE.AsyncResultBuilder,System.Threading.Tasks.Task{``0})">
+ <summary>
+ Method lets us transform data types into our internal representation.
+ </summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResultCEExtensions.AsyncResultBuilder.Source``2(FsToolkit.ErrorHandling.AsyncResultCE.AsyncResultBuilder,Microsoft.FSharp.Control.FSharpAsync{``0})">
+ <summary>
+ Method lets us transform data types into our internal representation.
+ </summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResultCEExtensions.AsyncResultBuilder.Source``2(FsToolkit.ErrorHandling.AsyncResultCE.AsyncResultBuilder,Microsoft.FSharp.Core.FSharpChoice{``0,``1})">
+ <summary>
+ Method lets us transform data types into our internal representation.
+ </summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResultCEExtensions.AsyncResultBuilder.Source``2(FsToolkit.ErrorHandling.AsyncResultCE.AsyncResultBuilder,Microsoft.FSharp.Core.FSharpResult{``0,``1})">
+ <summary>
+ Method lets us transform data types into our internal representation.
+ </summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResultCEExtensions.AsyncResultBuilder.Source``2(FsToolkit.ErrorHandling.AsyncResultCE.AsyncResultBuilder,``0)">
+ <summary>
+ Needed to allow `for..in` and `for..do` functionality
+ </summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResultCE.AsyncResultBuilder.Source``2(System.Threading.Tasks.Task{Microsoft.FSharp.Core.FSharpResult{``0,``1}})">
+ <summary>
+ Method lets us transform data types into our internal representation.
+ </summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResultCE.AsyncResultBuilder.Source``2(Microsoft.FSharp.Control.FSharpAsync{Microsoft.FSharp.Core.FSharpResult{``0,``1}})">
+ <summary>
+ Method lets us transform data types into our internal representation.  This is the identity method to recognize the self type.
+ 
+ See https://stackoverflow.com/questions/35286541/why-would-you-use-builder-source-in-a-custom-computation-expression-builder
+ </summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.AsyncResultOption.ignore``2(Microsoft.FSharp.Control.FSharpAsync{Microsoft.FSharp.Core.FSharpResult{Microsoft.FSharp.Core.FSharpOption{``0},``1}})">
+<summary>
+ Replaces the wrapped value with unit
+</summary>
+</member>
+</members>
+</doc>

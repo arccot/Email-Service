@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doc>
+<assembly><name>Ply</name></assembly>
+<members>
+<member name="T:Ply.TplPrimitives">
+<summary>
+ Entrypoint for generated code
+</summary>
+</member>
+<member name="T:FSharp.Control.Tasks.NonAffine">
+<summary>
+ Defines builders that are free of scheduler affinity, rejecting the SynchronizationContext or current TaskScheduler.
+ Also known as Task.ConfigureAwait(false), when building a library you want to use these builders.
+</summary>
+</member>
+<member name="T:FSharp.Control.Tasks.Affine">
+<summary>
+ Defines builders that are scheduler affine, respecting the SynchronizationContext or current TaskScheduler.
+ These match C# async await behavior, when building an application you normally want to use these builders.
+</summary>
+</member>
+</members>
+</doc>

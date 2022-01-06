@@ -1,0 +1,2254 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HdrHistogram</name>
+    </assembly>
+    <members>
+        <member name="T:HdrHistogram.Encoding.HistogramEncoderV2">
+            <summary>
+            An implementation of <see cref="T:HdrHistogram.Encoding.IEncoder"/> for the V2 HdrHistogram log format.
+            </summary>
+        </member>
+        <member name="F:HdrHistogram.Encoding.HistogramEncoderV2.Instance">
+            <summary>
+            A singleton instance of the <see cref="T:HdrHistogram.Encoding.HistogramEncoderV2"/>.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.Encoding.HistogramEncoderV2.Encode(HdrHistogram.Encoding.IRecordedData,HdrHistogram.Utilities.ByteBuffer)">
+            <summary>
+            Encodes the supplied <see cref="T:HdrHistogram.Encoding.IRecordedData"/> into the supplied <see cref="T:HdrHistogram.Utilities.ByteBuffer"/>.
+            </summary>
+            <param name="data">The data to encode.</param>
+            <param name="buffer">The target <see cref="T:HdrHistogram.Utilities.ByteBuffer"/> to write to.</param>
+            <returns>The number of bytes written.</returns>
+        </member>
+        <member name="T:HdrHistogram.Encoding.IEncoder">
+            <summary>
+            Defines a method to allow histogram data to be encoded into a <see cref="T:HdrHistogram.Utilities.ByteBuffer"/>.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.Encoding.IEncoder.Encode(HdrHistogram.Encoding.IRecordedData,HdrHistogram.Utilities.ByteBuffer)">
+            <summary>
+            Encodes the supplied <see cref="T:HdrHistogram.Encoding.IRecordedData"/> into the supplied <see cref="T:HdrHistogram.Utilities.ByteBuffer"/>.
+            </summary>
+            <param name="data">The data to encode.</param>
+            <param name="buffer">The target <see cref="T:HdrHistogram.Utilities.ByteBuffer"/> to write to.</param>
+            <returns>The number of bytes written.</returns>
+        </member>
+        <member name="T:HdrHistogram.Encoding.IHeader">
+            <summary>
+            Defines the header properties to be encoded for an HdrHistogram.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.Encoding.IHeader.Cookie">
+            <summary>
+            The cookie value for the histogram.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.Encoding.IHeader.PayloadLengthInBytes">
+            <summary>
+            The length in bytes of the payload body.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.Encoding.IHeader.NormalizingIndexOffset">
+            <summary>
+            The normalizing index offset.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.Encoding.IHeader.NumberOfSignificantValueDigits">
+            <summary>
+            THe number of significant digits that values are measured to.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.Encoding.IHeader.LowestTrackableUnitValue">
+            <summary>
+            The lowest trackable value for the histogram
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.Encoding.IHeader.HighestTrackableValue">
+            <summary>
+            The highest trackable value for the histogram
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.Encoding.IHeader.IntegerToDoubleValueConversionRatio">
+            <summary>
+            Integer to double conversion ratio.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.Encoding.IHeader.CapacityEstimateExcess">
+            <summary>
+            The amount of excess capacity that will not be needed.
+            </summary>
+        </member>
+        <member name="T:HdrHistogram.Encoding.IRecordedData">
+            <summary>
+            Defines the histogram data to be recorded
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.Encoding.IRecordedData.Cookie">
+            <summary>
+            The cookie value for the histogram.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.Encoding.IRecordedData.NormalizingIndexOffset">
+            <summary>
+            The normalizing index offset.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.Encoding.IRecordedData.NumberOfSignificantValueDigits">
+            <summary>
+            THe number of significant digits that values are measured to.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.Encoding.IRecordedData.LowestDiscernibleValue">
+            <summary>
+            The lowest trackable value for the histogram
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.Encoding.IRecordedData.HighestTrackableValue">
+            <summary>
+            The highest trackable value for the histogram
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.Encoding.IRecordedData.IntegerToDoubleValueConversionRatio">
+            <summary>
+            Integer to double conversion ratio.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.Encoding.IRecordedData.Counts">
+            <summary>
+            The actual array of counts.
+            </summary>
+        </member>
+        <member name="T:HdrHistogram.HistogramFactory">
+            <summary>
+            Provides factory methods to define the features of your histogram.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.HistogramFactory.#ctor">
+            <summary>
+            Private constructor to force usage via the Static starter methods.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.HistogramFactory.LowestTrackableValue">
+            <summary>
+            The lowest value that can be tracked (distinguished from 0) by the histogram.
+            Must be a positive integer that is &gt;= 1. 
+            May be internally rounded down to nearest power of 2.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.HistogramFactory.HighestTrackableValue">
+            <summary>
+            The highest value to be tracked by the histogram. Must be a positive integer that is &gt;= (2 * <see cref="P:HdrHistogram.HistogramFactory.LowestTrackableValue"/>).
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.HistogramFactory.NumberOfSignificantValueDigits">
+            <summary>
+            The number of significant decimal digits to which the histogram will maintain value resolution and separation.
+            Must be a non-negative integer between 0 and 5.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.HistogramFactory.WithThreadSafeWrites">
+            <summary>
+            Specifies that the Histogram to be created should be thread safe when written to from multiple threads.
+            </summary>
+            <returns>Returns a <see cref="T:HdrHistogram.HistogramFactory"/> that is set to return a threadsafe writer.</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramFactory.WithThreadSafeReads">
+            <summary>
+            Specifies that the consumer will need to be able to read Histogram values in a thread safe manner.
+            This will mean <see cref="T:HdrHistogram.Recorder"/> will be used to wrap the Histogram, allowing thread safe reads.
+            </summary>
+            <returns>Returns a <see cref="T:HdrHistogram.HistogramFactory.RecorderFactory"/> which can create recorders. Recorders allow for threadsafe reads.</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramFactory.Create(System.Int64,System.Int64,System.Int32)">
+            <summary>
+            A factory-method to create the Histogram.
+            </summary>
+            <param name="lowestDiscernibleValue">
+            The lowest value that can be tracked (distinguished from 0) by the histogram.
+            Must be a positive integer that is &gt;= 1. 
+            May be internally rounded down to nearest power of 2.
+            </param>
+            <param name="highestTrackableValue">The highest value to be tracked by the histogram. Must be a positive integer that is &gt;= (2 * <paramref name="lowestDiscernibleValue"/>).</param>
+            <param name="numberOfSignificantValueDigits">The number of significant decimal digits to which the histogram will maintain value resolution and separation.
+            Must be a non-negative integer between 0 and 5.
+            </param>
+            <returns>Returns a newly created <see cref="T:HdrHistogram.HistogramBase"/> instance defined by the settings of the current instance of <see cref="T:HdrHistogram.HistogramFactory"/>.</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramFactory.Create(System.Int64,System.Int64,System.Int64,System.Int32)">
+            <summary>
+            A factory-method to create the Histogram.
+            </summary>
+            <param name="instanceId">An identifier for this instance.</param>
+            <param name="lowestDiscernibleValue">
+            The lowest value that can be tracked (distinguished from 0) by the histogram.
+            Must be a positive integer that is &gt;= 1. 
+            May be internally rounded down to nearest power of 2.
+            </param>
+            <param name="highestTrackableValue">The highest value to be tracked by the histogram. Must be a positive integer that is &gt;= (2 * <paramref name="lowestDiscernibleValue"/>).</param>
+            <param name="numberOfSignificantValueDigits">The number of significant decimal digits to which the histogram will maintain value resolution and separation.
+            Must be a non-negative integer between 0 and 5.
+            </param>
+            <returns>Returns a newly created <see cref="T:HdrHistogram.HistogramBase"/> instance defined by the settings of the current instance of <see cref="T:HdrHistogram.HistogramFactory"/>.</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramFactory.WithValuesFrom(System.Int64)">
+            <summary>
+            Specifies the lowest value the Histogram should be configured to record.
+            </summary>
+            <param name="lowestDiscernibleValue">
+            The lowest value that can be tracked (distinguished from 0) by the histogram.
+            Must be a positive integer that is &gt;= 1. 
+            May be internally rounded down to nearest power of 2.
+            </param>
+            <returns>The <see cref="T:HdrHistogram.HistogramFactory"/> configured with the specified minimum allowed value.</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramFactory.WithValuesUpTo(System.Int64)">
+            <summary>
+            Specifies the highest value the Histogram should be configured to record.
+            </summary>
+            <param name="highestTrackableValue">
+            The highest value to be tracked by the histogram. Must be a positive integer that is &gt;= (2 * <see cref="P:HdrHistogram.HistogramFactory.LowestTrackableValue"/>).
+            </param>
+            <returns>The <see cref="T:HdrHistogram.HistogramFactory"/> configured with the specified maximum allowed value.</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramFactory.WithPrecisionOf(System.Int32)">
+            <summary>
+            Specifies the number of significant figures that the Histogram should record.
+            </summary>
+            <param name="numberOfSignificantValueDigits">
+            The number of significant decimal digits to which the histogram will maintain value resolution and separation.
+            Must be a non-negative integer between 0 and 5.
+            </param>
+            <returns>The <see cref="T:HdrHistogram.HistogramFactory"/> configured with the specified maximum allowed value.</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramFactory.Create">
+            <summary>
+            Creates the histogram as configured by this factory instance.
+            </summary>
+            <returns>A newly created instance of <see cref="T:HdrHistogram.HistogramBase"/>.</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramFactory.With64BitBucketSize">
+            <summary>
+            Specify that the Histogram should be able to record count values in the 64bit range.
+            </summary>
+            <returns>The <see cref="T:HdrHistogram.HistogramFactory"/> configured for 64bit bucket sizes.</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramFactory.With32BitBucketSize">
+            <summary>
+            Specify that the Histogram should be able to record count values in the 32bit range.
+            </summary>
+            <returns>The <see cref="T:HdrHistogram.HistogramFactory"/> configured for 64bit bucket sizes.</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramFactory.With16BitBucketSize">
+            <summary>
+            Specify that the Histogram should be able to record count values in the 32bit range.
+            </summary>
+            <returns>The <see cref="T:HdrHistogram.HistogramFactory"/> configured for 64bit bucket sizes.</returns>
+        </member>
+        <member name="T:HdrHistogram.HistogramFactory.RecorderFactory">
+            <summary>
+            Factory for creating Recorders for thread safe reading of histograms.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.HistogramFactory.RecorderFactory.Create">
+            <summary>
+            Creates the recorder as configured by this factory instance.
+            </summary>
+            <returns>A newly created instance of <see cref="T:HdrHistogram.Recorder"/>.</returns>
+        </member>
+        <member name="T:HdrHistogram.HistogramBase">
+            <summary>
+            Base class for High Dynamic Range (HDR) Histograms
+            </summary>
+            <remarks>
+            <see cref="T:HdrHistogram.HistogramBase"/> supports the recording and analyzing sampled data value counts across a configurable
+            integer value range with configurable value precision within the range.
+            Value precision is expressed as the number of significant digits in the value recording, and provides control over 
+            value quantization behavior across the value range and the subsequent value resolution at any given level.
+            <para>
+            For example, a Histogram could be configured to track the counts of observed integer values between 0 and
+            36,000,000,000 while maintaining a value precision of 3 significant digits across that range.
+            Value quantization within the range will thus be no larger than 1/1,000th (or 0.1%) of any value.
+            This example Histogram could be used to track and analyze the counts of observed response times ranging between
+            100 nanoseconds and 1 hour in magnitude, while maintaining a value resolution of 100 nanosecond up to 
+            100 microseconds, a resolution of 1 millisecond(or better) up to one second, and a resolution of 1 second 
+            (or better) up to 1,000 seconds.
+            At it's maximum tracked value(1 hour), it would still maintain a resolution of 3.6 seconds (or better).
+            </para>
+            </remarks>
+        </member>
+        <member name="P:HdrHistogram.HistogramBase.InstanceId">
+            <summary>
+            An identifier for the Histogram. Maybe generated by the Recorder if used.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.HistogramBase.HighestTrackableValue">
+            <summary>
+            Get the configured highestTrackableValue
+            </summary>
+            <returns>highestTrackableValue</returns>
+        </member>
+        <member name="P:HdrHistogram.HistogramBase.LowestTrackableValue">
+            <summary>
+            Get the configured lowestTrackableValue
+            </summary>
+            <returns>lowestTrackableValue</returns>
+        </member>
+        <member name="P:HdrHistogram.HistogramBase.NumberOfSignificantValueDigits">
+            <summary>
+            Get the configured numberOfSignificantValueDigits
+            </summary>
+            <returns>numberOfSignificantValueDigits</returns>
+        </member>
+        <member name="P:HdrHistogram.HistogramBase.StartTimeStamp">
+            <summary>
+            Gets or Sets the start time stamp value associated with this histogram to a given value.
+            By convention in milliseconds since the epoch.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.HistogramBase.EndTimeStamp">
+            <summary>
+            Gets or Sets the end time stamp value associated with this histogram to a given value.
+            By convention in milliseconds since the epoch.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.HistogramBase.Tag">
+            <summary>
+            Gets or Sets the optional Tag string associated with this histogram.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.HistogramBase.TotalCount">
+            <summary>
+            Gets the total number of recorded values.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.HistogramBase.BucketCount">
+            <summary>
+            The number of buckets used to store count values.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.HistogramBase.SubBucketCount">
+            <summary>
+            The number of sub-buckets used to store count values.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.HistogramBase.CountsArrayLength">
+            <summary>
+            The length of the internal array that stores the counts.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.HistogramBase.WordSizeInBytes">
+            <summary>
+            Returns the word size of this implementation
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.HistogramBase.MaxAllowableCount">
+            <summary>
+            The maximum value a count can be for any given bucket.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.#ctor(System.Int64,System.Int64,System.Int32)">
+            <summary>
+            Construct a histogram given the lowest and highest values to be tracked and a number of significant decimal digits.
+            </summary>
+            <param name="lowestTrackableValue">The lowest value that can be tracked (distinguished from 0) by the histogram.
+            Must be a positive integer that is &gt;= 1.
+            May be internally rounded down to nearest power of 2.
+            </param>
+            <param name="highestTrackableValue">The highest value to be tracked by the histogram.
+            Must be a positive integer that is &gt;= (2 * lowestTrackableValue).
+            </param>
+            <param name="numberOfSignificantValueDigits">
+            The number of significant decimal digits to which the histogram will maintain value resolution and separation. 
+            Must be a non-negative integer between 0 and 5.
+            </param>
+            <remarks>
+            Providing a lowestTrackableValue is useful in situations where the units used for the histogram's values are much 
+            smaller that the minimal accuracy required.
+            For example when tracking time values stated in nanoseconds, where the minimal accuracy required is a
+            microsecond, the proper value for <paramref name="lowestTrackableValue"/> would be 1000.
+            </remarks>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.#ctor(System.Int64,System.Int64,System.Int64,System.Int32)">
+            <summary>
+            Construct a histogram given the lowest and highest values to be tracked and a number of significant decimal digits.
+            </summary>
+            <param name="instanceId">An identifier for this instance.</param>
+            <param name="lowestTrackableValue">The lowest value that can be tracked (distinguished from 0) by the histogram.
+            Must be a positive integer that is &gt;= 1.
+            May be internally rounded down to nearest power of 2.
+            </param>
+            <param name="highestTrackableValue">The highest value to be tracked by the histogram.
+            Must be a positive integer that is &gt;= (2 * lowestTrackableValue).
+            </param>
+            <param name="numberOfSignificantValueDigits">
+            The number of significant decimal digits to which the histogram will maintain value resolution and separation. 
+            Must be a non-negative integer between 0 and 5.
+            </param>
+            <remarks>
+            Providing a lowestTrackableValue is useful in situations where the units used for the histogram's values are much 
+            smaller that the minimal accuracy required.
+            For example when tracking time values stated in ticks (100 nanoseconds), where the minimal accuracy required is a
+            microsecond, the proper value for lowestTrackableValue would be 10.
+            </remarks>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.Copy">
+            <summary>
+            Copies the data from this instance to a new instance.
+            </summary>
+            <returns>A new copy of this instance.</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.RecordValue(System.Int64)">
+            <summary>
+            Records a value in the histogram
+            </summary>
+            <param name="value">The value to be recorded</param>
+            <exception cref="T:System.IndexOutOfRangeException">if value is exceeds highestTrackableValue</exception>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.RecordValueWithCount(System.Int64,System.Int64)">
+            <summary>
+            Record a value in the histogram (adding to the value's current count)
+            </summary>
+            <param name="value">The value to be recorded</param>
+            <param name="count">The number of occurrences of this value to record</param>
+            <exception cref="T:System.IndexOutOfRangeException">if value is exceeds highestTrackableValue</exception>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.RecordValueWithExpectedInterval(System.Int64,System.Int64)">
+            <summary>
+            Record a value in the histogram.
+            </summary>
+            <param name="value">The value to record</param>
+            <param name="expectedIntervalBetweenValueSamples">If <paramref name="expectedIntervalBetweenValueSamples"/> is larger than 0, add auto-generated value records as appropriate if <paramref name="value"/> is larger than <paramref name="expectedIntervalBetweenValueSamples"/></param>
+            <exception cref="T:System.IndexOutOfRangeException">if value is exceeds highestTrackableValue</exception>
+            <remarks>
+            To compensate for the loss of sampled values when a recorded value is larger than the expected interval between value samples, 
+            Histogram will auto-generate an additional series of decreasingly-smaller (down to the expectedIntervalBetweenValueSamples) value records.
+            <para>
+            Note: This is a at-recording correction method, as opposed to the post-recording correction method provided by currently unimplemented <c>CopyCorrectedForCoordinatedOmission</c> method.
+            The two methods are mutually exclusive, and only one of the two should be be used on a given data set to correct for the same coordinated omission issue.
+            </para>
+            See notes in the description of the Histogram calls for an illustration of why this corrective behavior is important.
+            </remarks>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.Reset">
+            <summary>
+            Reset the contents and stats of this histogram
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.Add(HdrHistogram.HistogramBase)">
+            <summary>
+            Add the contents of another histogram to this one.
+            </summary>
+            <param name="fromHistogram">The other histogram.</param>
+            <exception cref="T:System.IndexOutOfRangeException">if values in fromHistogram's are higher than highestTrackableValue.</exception>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.SizeOfEquivalentValueRange(System.Int64)">
+            <summary>
+            Get the size (in value units) of the range of values that are equivalent to the given value within the histogram's resolution. 
+            Where "equivalent" means that value samples recorded for any two equivalent values are counted in a common total count.
+            </summary>
+            <param name="value">The given value</param>
+            <returns>The lowest value that is equivalent to the given value within the histogram's resolution.</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.LowestEquivalentValue(System.Int64)">
+            <summary>
+            Get the lowest value that is equivalent to the given value within the histogram's resolution.
+            Where "equivalent" means that value samples recorded for any two equivalent values are counted in a common total count.
+            </summary>
+            <param name="value">The given value</param>
+            <returns>The lowest value that is equivalent to the given value within the histogram's resolution.</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.MedianEquivalentValue(System.Int64)">
+            <summary>
+            Get a value that lies in the middle (rounded up) of the range of values equivalent the given value.
+            Where "equivalent" means that value samples recorded for any two equivalent values are counted in a common total count.
+            </summary>
+            <param name="value">The given value</param>
+            <returns>The value lies in the middle (rounded up) of the range of values equivalent the given value.</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.NextNonEquivalentValue(System.Int64)">
+            <summary>
+            Get the next value that is not equivalent to the given value within the histogram's resolution.
+            Where "equivalent" means that value samples recorded for any two equivalent values are counted in a common total count.
+            </summary>
+            <param name="value">The given value</param>
+            <returns>The next value that is not equivalent to the given value within the histogram's resolution.</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.GetValueAtPercentile(System.Double)">
+            <summary>
+            Get the value at a given percentile
+            </summary>
+            <param name="percentile">The percentile to get the value for</param>
+            <returns>The value a given percentage of all recorded value entries in the histogram fall below.</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.GetCountAtValue(System.Int64)">
+            <summary>
+            Get the count of recorded values at a specific value
+            </summary>
+            <param name="value">The value for which to provide the recorded count</param>
+            <returns>The total count of values recorded in the histogram at the given value (to within the histogram resolution at the value level).</returns>
+            <exception cref="T:System.IndexOutOfRangeException">On parameters that are outside the tracked value range</exception>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.RecordedValues">
+            <summary>
+            Provide a means of iterating through all recorded histogram values using the finest granularity steps supported by the underlying representation.
+            The iteration steps through all non-zero recorded value counts, and terminates when all recorded histogram values are exhausted.
+            </summary>
+            <returns>An enumerator of <see cref="T:HdrHistogram.Iteration.HistogramIterationValue"/> through the histogram using a <see cref="T:HdrHistogram.Iteration.RecordedValuesEnumerator"/></returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.AllValues">
+            <summary>
+            Provide a means of iterating through all histogram values using the finest granularity steps supported by the underlying representation.
+            The iteration steps through all possible unit value levels, regardless of whether or not there were recorded values for that value level, and terminates when all recorded histogram values are exhausted.
+            </summary>
+            <returns>An enumerator of <see cref="T:HdrHistogram.Iteration.HistogramIterationValue"/> through the histogram using a <see cref="T:HdrHistogram.Iteration.RecordedValuesEnumerator"/></returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.GetNeededByteBufferCapacity">
+            <summary>
+            Get the capacity needed to encode this histogram into a <see cref="T:HdrHistogram.Utilities.ByteBuffer"/>
+            </summary>
+            <returns>the capacity needed to encode this histogram into a <see cref="T:HdrHistogram.Utilities.ByteBuffer"/></returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.Encode(HdrHistogram.Utilities.ByteBuffer,HdrHistogram.Encoding.IEncoder)">
+            <summary>
+            Encode this histogram into a <see cref="T:HdrHistogram.Utilities.ByteBuffer"/>
+            </summary>
+            <param name="targetBuffer">The buffer to encode into</param>
+            <param name="encoder">The encoder to use</param>
+            <returns>The number of bytes written to the buffer</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.HasOverflowed">
+            <summary>
+            Determine if this histogram had any of it's value counts overflow.
+            </summary>
+            <returns><c>true</c> if this histogram has had a count value overflow, else <c>false</c>.</returns>
+            <remarks>
+            Since counts are kept in fixed integer form with potentially limited range (e.g. int and short), a specific value range count could potentially overflow, leading to an inaccurate and misleading histogram representation.
+            This method accurately determines whether or not an overflow condition has happened in an <see cref="T:HdrHistogram.IntHistogram"/> or <see cref="T:HdrHistogram.ShortHistogram"/>.
+            </remarks>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.GetEstimatedFootprintInBytes">
+            <summary>
+            Provide a (conservatively high) estimate of the Histogram's total footprint in bytes
+            </summary>
+            <returns>a (conservatively high) estimate of the Histogram's total footprint in bytes</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.FillCountsFromBuffer(HdrHistogram.Utilities.ByteBuffer,System.Int32,System.Int32)">
+            <summary>
+            Copies data from the provided buffer into the internal counts array.
+            </summary>
+            <param name="buffer">The buffer to read from.</param>
+            <param name="length">The length of the buffer to read.</param>
+            <param name="wordSizeInBytes">The word size in bytes.</param>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.GetCountAtIndex(System.Int32)">
+            <summary>
+            Gets the number of recorded values at a given index.
+            </summary>
+            <param name="index">The index to get the count for</param>
+            <returns>The number of recorded values at the given index.</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.SetCountAtIndex(System.Int32,System.Int64)">
+            <summary>
+            Sets the count at the given index.
+            </summary>
+            <param name="index">The index to be set</param>
+            <param name="value">The value to set</param>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.IncrementCountAtIndex(System.Int32)">
+            <summary>
+            Increments the count at the given index. Will also increment the <see cref="P:HdrHistogram.HistogramBase.TotalCount"/>.
+            </summary>
+            <param name="index">The index to increment the count at.</param>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.AddToCountAtIndex(System.Int32,System.Int64)">
+            <summary>
+            Adds the specified amount to the count of the provided index. Also increments the <see cref="P:HdrHistogram.HistogramBase.TotalCount"/> by the same amount.
+            </summary>
+            <param name="index">The index to increment.</param>
+            <param name="addend">The amount to increment by.</param>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.ClearCounts">
+            <summary>
+            Clears the counts of this implementation.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.CopyCountsInto(System.Int64[])">
+            <summary>
+            Copies the internal counts array into the supplied array.
+            </summary>
+            <param name="target">The array to write each count value into.</param>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.UpdatedMaxValue(System.Int64)">
+            <summary>
+            Set internally tracked _maxValue to new value if new value is greater than current one.
+            May be overridden by subclasses for synchronization or atomicity purposes.
+            </summary>
+            <param name="value">new _maxValue to set</param>
+        </member>
+        <member name="M:HdrHistogram.HistogramBase.UpdateMinNonZeroValue(System.Int64)">
+            <summary>
+            Set internally tracked _minNonZeroValue to new value if new value is smaller than current one.
+            May be overridden by subclasses for synchronization or atomicity purposes.
+            </summary>
+            <param name="value">new _minNonZeroValue to set</param>
+        </member>
+        <member name="T:HdrHistogram.HistogramEncoding">
+            <summary>
+            Exposes functionality to encode and decode <see cref="T:HdrHistogram.HistogramBase"/> types.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.HistogramEncoding.DecodeFromCompressedByteBuffer(HdrHistogram.Utilities.ByteBuffer,System.Int64)">
+            <summary>
+            Construct a new histogram by decoding it from a compressed form in a ByteBuffer.
+            </summary>
+            <param name="buffer">The buffer to decode from</param>
+            <param name="minBarForHighestTrackableValue">Force highestTrackableValue to be set at least this high</param>
+            <returns>The newly constructed histogram</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramEncoding.DecodeFromByteBuffer(HdrHistogram.Utilities.ByteBuffer,System.Int64,System.IO.Compression.DeflateStream)">
+            <summary>
+            Construct a new histogram by decoding it from a <see cref="T:HdrHistogram.Utilities.ByteBuffer"/>.
+            </summary>
+            <param name="buffer">The buffer to decode from</param>
+            <param name="minBarForHighestTrackableValue">Force highestTrackableValue to be set at least this high</param>
+            <param name="decompressor">The <see cref="T:System.IO.Compression.DeflateStream"/> that is being used to decompress the payload. Optional.</param>
+            <returns>The newly constructed histogram</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramEncoding.EncodeIntoCompressedByteBuffer(HdrHistogram.HistogramBase,HdrHistogram.Utilities.ByteBuffer)">
+            <summary>
+            Encode this histogram in compressed form into a <see cref="T:HdrHistogram.Utilities.ByteBuffer"/>.
+            </summary>
+            <param name="source">The histogram to encode</param>
+            <param name="targetBuffer">The buffer to write to</param>
+            <returns>The number of bytes written to the buffer</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramEncoding.GetEncodingCookie(HdrHistogram.HistogramBase)">
+            <summary>
+            Gets the encoding cookie for a Histogram.
+            </summary>
+            <param name="histogram">The histogram to get the cookie for</param>
+            <returns>The integer cookie value for the histogram.</returns>
+        </member>
+        <member name="T:HdrHistogram.HistogramExtensions">
+            <summary>
+            Extension methods for the Histogram types.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.HistogramExtensions.GetMaxValue(HdrHistogram.HistogramBase)">
+            <summary>
+            Get the highest recorded value level in the histogram
+            </summary>
+            <returns>the Max value recorded in the histogram</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramExtensions.GetMean(HdrHistogram.HistogramBase)">
+            <summary>
+            Get the computed mean value of all recorded values in the histogram
+            </summary>
+            <returns>the mean value (in value units) of the histogram data</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramExtensions.GetStdDeviation(HdrHistogram.HistogramBase)">
+            <summary>
+            Get the computed standard deviation of all recorded values in the histogram
+            </summary>
+            <returns>the standard deviation (in value units) of the histogram data</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramExtensions.HighestEquivalentValue(HdrHistogram.HistogramBase,System.Int64)">
+            <summary>
+            Get the highest value that is equivalent to the given value within the histogram's resolution.
+            Where "equivalent" means that value samples recorded for any two equivalent values are counted in a common
+            total count.
+            </summary>
+            <param name="histogram">The histogram to operate on</param>
+            <param name="value">The given value</param>
+            <returns>The highest value that is equivalent to the given value within the histogram's resolution.</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramExtensions.CopyInto(HdrHistogram.HistogramBase,HdrHistogram.HistogramBase)">
+            <summary>
+            Copy this histogram into the target histogram, overwriting it's contents.
+            </summary>
+            <param name="source">The source histogram</param>
+            <param name="targetHistogram">the histogram to copy into</param>
+        </member>
+        <member name="M:HdrHistogram.HistogramExtensions.Percentiles(HdrHistogram.HistogramBase,System.Int32)">
+            <summary>
+            Provide a means of iterating through histogram values according to percentile levels. 
+            The iteration is performed in steps that start at 0% and reduce their distance to 100% according to the
+            <paramref name="percentileTicksPerHalfDistance"/> parameter, ultimately reaching 100% when all recorded
+            histogram values are exhausted.
+            </summary>
+            <param name="histogram">The histogram to operate on</param>
+            <param name="percentileTicksPerHalfDistance">
+            The number of iteration steps per half-distance to 100%.
+            </param>
+            <returns>
+            An enumerator of <see cref="T:HdrHistogram.Iteration.HistogramIterationValue"/> through the histogram using a
+            <see cref="T:HdrHistogram.Iteration.PercentileEnumerator"/>.
+            </returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramExtensions.OutputPercentileDistribution(HdrHistogram.HistogramBase,System.IO.TextWriter,System.Int32,System.Double,System.Boolean)">
+            <summary>
+            Produce textual representation of the value distribution of histogram data by percentile. 
+            The distribution is output with exponentially increasing resolution, with each exponentially decreasing 
+            half-distance containing <paramref name="percentileTicksPerHalfDistance"/> percentile reporting tick points.
+            </summary>
+            <param name="histogram">The histogram to operate on</param>
+            <param name="writer">The <see cref="T:System.IO.TextWriter"/> into which the distribution will be output</param>
+            <param name="percentileTicksPerHalfDistance">
+            The number of reporting points per exponentially decreasing half-distance
+            </param>
+            <param name="outputValueUnitScalingRatio">
+            The scaling factor by which to divide histogram recorded values units in output.
+            Use the <see cref="T:HdrHistogram.OutputScalingFactor"/> constant values to help choose an appropriate output measurement.
+            </param>
+            <param name="useCsvFormat">Output in CSV (Comma Separated Values) format if <c>true</c>, else use plain text form.</param>
+        </member>
+        <member name="M:HdrHistogram.HistogramExtensions.Record(HdrHistogram.IRecorder,System.Action)">
+            <summary>
+            Executes the action and records the time to complete the action. 
+            The time is recorded in system clock ticks. 
+            This time may vary between frameworks and platforms, but is equivalent to <c>(1/Stopwatch.Frequency)</c> seconds.
+            Note this is a convenience method and can carry a cost.
+            If the <paramref name="action"/> delegate is not cached, then it may incur an allocation cost for each invocation of <see cref="M:HdrHistogram.HistogramExtensions.Record(HdrHistogram.IRecorder,System.Action)"/>
+            </summary>
+            <param name="recorder">The <see cref="T:HdrHistogram.IRecorder"/> instance to record the latency in.</param>
+            <param name="action">The functionality to execute and measure</param>
+            <remarks>
+            <para>
+            The units returned from <code>Stopwatch.GetTimestamp()</code> are used as the unit of 
+            recording here as they are the smallest unit that .NET can measure and require no 
+            conversion at time of recording. 
+            Instead conversion (scaling) can be done at time of output to microseconds, milliseconds,
+            seconds or other appropriate unit.
+            These units are sometimes referred to as ticks, but should not not to be confused with 
+            ticks used in <seealso cref="T:System.DateTime"/> or <seealso cref="T:System.TimeSpan"/>.
+            </para>
+            <para>
+            If you are able to cache the <paramref name="action"/> delegate, then doing so is encouraged.
+            <example>
+            Here are two examples.
+            The first does not cache the delegate
+            
+            <code>
+            for (long i = 0; i &lt; loopCount; i++)
+            {
+              histogram.Record(IncrementNumber);
+            }
+            </code>
+            This second example does cache the delegate
+            <code>
+            Action incrementNumber = IncrementNumber;
+            for (long i = 0; i &lt; loopCount; i++)
+            {
+              histogram.Record(incrementNumber);
+            }
+            </code>
+            In the second example, we will not be making allocations each time i.e. an allocation of an <seealso cref="T:System.Action"/> from <code>IncrementNumber</code>.
+            This will reduce memory pressure and therefore garbage collection penalties.
+            For performance sensitive applications, this method may not be suitable.
+            As always, you are encouraged to test and measure the impact for your scenario.
+            </example>
+            </para>
+            </remarks>
+        </member>
+        <member name="M:HdrHistogram.HistogramExtensions.RecordScope(HdrHistogram.IRecorder)">
+            <summary>
+            Records the elapsed time till the returned token is disposed.
+            This can be useful to testing large blocks of code, or wrapping around and <c>await</c> clause.
+            </summary>
+            <param name="recorder">The <see cref="T:HdrHistogram.IRecorder"/> instance to record the latency in.</param>
+            <returns>Returns a token to be disposed once the scope </returns>
+            <remarks>
+            This can be helpful for recording a scope of work.
+            It also has the benefit of allowing a simple way to record an awaitable method.
+            <example>
+            This example shows how an awaitable method can be cleanly instrumented using C# using scope.
+            <code>
+            using(recorder.RecordScope())
+            {
+                await SomeExpensiveCall();
+            }
+            </code>
+            </example>
+            It should be noted that this method returns a token and as such allocates an object.
+            This should taken into consideration, specifically the cost of the allocation and GC would affect the program.
+            </remarks>
+        </member>
+        <member name="T:HdrHistogram.HistogramFactoryDelegate">
+            <summary>
+            The method definition for a histogram factory.
+            </summary>
+            <param name="instanceId">The instance id the histogram should be created with.</param>
+            <param name="lowestDiscernibleValue">The lowest value that can be tracked (distinguished from 0) by the histogram.
+            Must be a positive integer that is &gt;= 1.
+            May be internally rounded down to nearest power of 2.
+            </param>
+            <param name="highestTrackableValue">The highest value to be tracked by the histogram.
+            Must be a positive integer that is &gt;= (2 * lowestTrackableValue).
+            </param>
+            <param name="numberOfSignificantValueDigits">
+            The number of significant decimal digits to which the histogram will maintain value resolution and separation. 
+            Must be a non-negative integer between 0 and 5.
+            </param>
+        </member>
+        <member name="T:HdrHistogram.HistogramLogReader">
+            <summary>
+            Reads a log of Histograms from the provided <see cref="T:System.IO.Stream"/>.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.HistogramLogReader.Read(System.IO.Stream)">
+            <summary>
+            Reads each histogram out from the underlying stream.
+            </summary>
+            <param name="inputStream">The <see cref="T:System.IO.Stream"/> to read from.</param>
+            <returns>Return a lazily evaluated sequence of histograms.</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramLogReader.#ctor(System.IO.Stream)">
+            <summary>
+            Creates a <see cref="T:HdrHistogram.HistogramLogReader"/> that reads from the provided <see cref="T:System.IO.Stream"/>.
+            </summary>
+            <param name="inputStream">The <see cref="T:System.IO.Stream"/> to read from.</param>
+        </member>
+        <member name="M:HdrHistogram.HistogramLogReader.ReadHistograms">
+            <summary>
+            Reads each histogram out from the underlying stream.
+            </summary>
+            <returns>Return a lazily evaluated sequence of histograms.</returns>
+        </member>
+        <member name="M:HdrHistogram.HistogramLogReader.GetStartTime">
+            <summary>
+            Gets the start time for the set of Histograms.
+            </summary>
+            <returns>Either the explicit encoded start time, or falls back to the start time of the first histogram.</returns>
+            <remarks>
+            The current implementation requires the consumer to only use this after enumerating the Histograms from the <see cref="M:HdrHistogram.HistogramLogReader.ReadHistograms"/> method.
+            </remarks>
+        </member>
+        <member name="M:HdrHistogram.HistogramLogReader.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="T:HdrHistogram.HistogramLogWriter">
+            <summary>
+            Writes zero, one or many <see cref="T:HdrHistogram.HistogramBase"/> instances to a <see cref="T:System.IO.Stream"/>.
+            </summary>
+            <seealso cref="T:HdrHistogram.HistogramLogReader"/>
+        </member>
+        <member name="M:HdrHistogram.HistogramLogWriter.Write(System.IO.Stream,System.DateTime,HdrHistogram.HistogramBase[])">
+            <summary>
+            Writes the provided histograms to the underlying <see cref="T:System.IO.Stream"/> with a given overall start time.
+            </summary>
+            <param name="outputStream">The <see cref="T:System.IO.Stream"/> to write to.</param>
+            <param name="startTime">The start time of the set of histograms.</param>
+            <param name="histograms">The histograms to include in the output.</param>
+        </member>
+        <member name="M:HdrHistogram.HistogramLogWriter.#ctor(System.IO.Stream)">
+            <summary>
+            Creates a <see cref="T:HdrHistogram.HistogramLogWriter"/> that writes to an underlying <see cref="T:System.IO.Stream"/>.
+            </summary>
+            <param name="outputStream">
+            The stream to write to. 
+            The stream is left open for the consumer to close.
+            </param>
+        </member>
+        <member name="M:HdrHistogram.HistogramLogWriter.Write(System.DateTime,HdrHistogram.HistogramBase[])">
+            <summary>
+            Writes the provided histograms to the underlying <see cref="T:System.IO.Stream"/> with a given overall start time.
+            </summary>
+            <param name="startTime">The start time of the set of histograms.</param>
+            <param name="histograms">The histograms to include in the output.</param>
+        </member>
+        <member name="M:HdrHistogram.HistogramLogWriter.Append(HdrHistogram.HistogramBase)">
+            <summary>
+            Appends a Histogram to the log. 
+            </summary>
+            <param name="histogram">The histogram to write to the log.</param>
+        </member>
+        <member name="M:HdrHistogram.HistogramLogWriter.WriteLogFormatVersion">
+            <summary>
+            Output a log format version to the log.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.HistogramLogWriter.WriteStartTime(System.DateTime)">
+            <summary>
+            Log a start time in the log.
+            </summary>
+            <param name="startTimeWritten">Time the log was started.</param>
+        </member>
+        <member name="M:HdrHistogram.HistogramLogWriter.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="T:HdrHistogram.IHistogramLogV1Reader">
+            <summary>
+            Defines a method for reading Histogram logs in the v1 format.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.IHistogramLogV1Reader.ReadHistograms">
+            <summary>
+            Reads a v1 formatted histogram log.
+            </summary>
+            <returns>Returns a sequence of <see cref="T:HdrHistogram.HistogramBase"/> items.</returns>
+        </member>
+        <member name="T:HdrHistogram.IntConcurrentHistogram">
+            <summary>
+            An integer values High Dynamic Range (HDR) Histogram that supports safe concurrent recording operations.
+            </summary>
+            <remarks>
+            A <see cref="T:HdrHistogram.IntConcurrentHistogram"/> guarantees lossless recording of values into the histogram even when the histogram is updated by multiple threads.
+            <p>
+            It is important to note that concurrent recording is the only thread-safe behavior provided by <seealso cref="T:HdrHistogram.IntConcurrentHistogram"/>.
+            It provides no implicit synchronization that would prevent the contents of the histogram from changing during other operations.
+            These non-synchronised operations include queries, iterations, copies, or addition operations on the histogram. 
+            Concurrent updates that would safely work in the presence of queries, copies, or additions of histogram objects should use the <seealso cref="T:HdrHistogram.Recorder"/> which is intended for this purpose.
+            </p>
+            </remarks>
+        </member>
+        <member name="M:HdrHistogram.IntConcurrentHistogram.#ctor(System.Int64,System.Int64,System.Int32)">
+            <summary>
+            Construct a <see cref="T:HdrHistogram.IntConcurrentHistogram"/> given the lowest and highest values to be tracked and a number of significant decimal digits.
+            Providing a <paramref name="lowestTrackableValue"/> is useful is situations where the units used for the histogram's values are much smaller that the minimal accuracy required. 
+            For example when tracking time values stated in nanoseconds, where the minimal accuracy required is a microsecond, the proper value for <paramref name="lowestTrackableValue"/> would be 1000.
+            </summary>
+            <param name="lowestTrackableValue">
+            The lowest value that can be tracked (distinguished from 0) by the histogram.
+            Must be a positive integer that is &gt;= 1. 
+            May be internally rounded down to nearest power of 2.
+            </param>
+            <param name="highestTrackableValue">The highest value to be tracked by the histogram. Must be a positive integer that is &gt;= (2 * <paramref name="lowestTrackableValue"/>).</param>
+            <param name="numberOfSignificantValueDigits">The number of significant decimal digits to which the histogram will maintain value resolution and separation.
+            Must be a non-negative integer between 0 and 5.</param>
+        </member>
+        <member name="M:HdrHistogram.IntConcurrentHistogram.#ctor(System.Int64,System.Int64,System.Int64,System.Int32)">
+            <summary>
+            Construct a <see cref="T:HdrHistogram.IntConcurrentHistogram"/> given the lowest and highest values to be tracked and a number of significant decimal digits.
+            </summary>
+            <param name="instanceId">An identifier for this instance.</param>
+            <param name="lowestTrackableValue">The lowest value that can be tracked (distinguished from 0) by the histogram.
+            Must be a positive integer that is &gt;= 1.
+            May be internally rounded down to nearest power of 2.
+            </param>
+            <param name="highestTrackableValue">The highest value to be tracked by the histogram.
+            Must be a positive integer that is &gt;= (2 * lowestTrackableValue).
+            </param>
+            <param name="numberOfSignificantValueDigits">
+            The number of significant decimal digits to which the histogram will maintain value resolution and separation. 
+            Must be a non-negative integer between 0 and 5.
+            </param>
+            <remarks>
+            Providing a lowestTrackableValue is useful in situations where the units used for the histogram's values are much 
+            smaller that the minimal accuracy required.
+            For example when tracking time values stated in ticks (100 nanoseconds), where the minimal accuracy required is a
+            microsecond, the proper value for lowestTrackableValue would be 10.
+            </remarks>
+        </member>
+        <member name="P:HdrHistogram.IntConcurrentHistogram.TotalCount">
+            <summary>
+            Gets the total number of recorded values.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.IntConcurrentHistogram.WordSizeInBytes">
+            <summary>
+            Returns the word size of this implementation
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.IntConcurrentHistogram.MaxAllowableCount">
+            <summary>
+            The maximum value a count can be for any given bucket.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.IntConcurrentHistogram.Copy">
+            <summary>
+            Copies the data from this instance to a new instance.
+            </summary>
+            <returns>A new copy of this instance.</returns>
+        </member>
+        <member name="M:HdrHistogram.IntConcurrentHistogram.GetCountAtIndex(System.Int32)">
+            <summary>
+            Gets the number of recorded values at a given index.
+            </summary>
+            <param name="index">The index to get the count for</param>
+            <returns>The number of recorded values at the given index.</returns>
+        </member>
+        <member name="M:HdrHistogram.IntConcurrentHistogram.SetCountAtIndex(System.Int32,System.Int64)">
+            <summary>
+            Sets the count at the given index.
+            </summary>
+            <param name="index">The index to be set</param>
+            <param name="value">The value to set</param>
+        </member>
+        <member name="M:HdrHistogram.IntConcurrentHistogram.IncrementCountAtIndex(System.Int32)">
+            <summary>
+            Increments the count at the given index. Will also increment the <see cref="P:HdrHistogram.HistogramBase.TotalCount"/>.
+            </summary>
+            <param name="index">The index to increment the count at.</param>
+        </member>
+        <member name="M:HdrHistogram.IntConcurrentHistogram.AddToCountAtIndex(System.Int32,System.Int64)">
+            <summary>
+            Adds the specified amount to the count of the provided index. Also increments the <see cref="P:HdrHistogram.HistogramBase.TotalCount"/> by the same amount.
+            </summary>
+            <param name="index">The index to increment.</param>
+            <param name="addend">The amount to increment by.</param>
+        </member>
+        <member name="M:HdrHistogram.IntConcurrentHistogram.ClearCounts">
+            <summary>
+            Clears the counts of this implementation.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.IntConcurrentHistogram.CopyCountsInto(System.Int64[])">
+            <summary>
+            Copies the internal counts array into the supplied array.
+            </summary>
+            <param name="target">The array to write each count value into.</param>
+        </member>
+        <member name="T:HdrHistogram.IntHistogram">
+            <summary>
+            A High Dynamic Range (HDR) Histogram using an <see cref="T:System.Int32"/> count type.
+            </summary>
+            <remarks>
+            Histogram supports the recording and analyzing sampled data value counts across a configurable integer value
+            range with configurable value precision within the range.
+            Value precision is expressed as the number of significant digits in the value recording, and provides control 
+            over value quantization behavior across the value range and the subsequent value resolution at any given level.
+            <para>
+            For example, a Histogram could be configured to track the counts of observed integer values between 0 and
+            36,000,000,000 while maintaining a value precision of 3 significant digits across that range.
+            Value quantization within the range will thus be no larger than 1/1,000th (or 0.1%) of any value.
+            This example Histogram could be used to track and analyze the counts of observed response times ranging between
+            100 nanoseconds and 1 hour in magnitude, while maintaining a value resolution of 100 nanosecond up to 
+            100 microseconds, a resolution of 1 millisecond(or better) up to one second, and a resolution of 1 second 
+            (or better) up to 1,000 seconds.
+            At it's maximum tracked value(1 hour), it would still maintain a resolution of 3.6 seconds (or better).
+            </para>
+            Histogram tracks value counts in <see cref="T:System.Int32"/> fields.
+            Other field types are available in the <see cref="T:HdrHistogram.LongHistogram"/> and <see cref="T:HdrHistogram.ShortHistogram"/> 
+            implementations of <see cref="T:HdrHistogram.HistogramBase"/>.
+            </remarks>
+        </member>
+        <member name="M:HdrHistogram.IntHistogram.#ctor(System.Int64,System.Int32)">
+            <summary>
+            Construct an <see cref="T:HdrHistogram.IntHistogram"/> given the highest value to be tracked and a number of significant decimal digits. 
+            The histogram will be constructed to implicitly track(distinguish from 0) values as low as 1. 
+            </summary>
+            <param name="highestTrackableValue">The highest value to be tracked by the histogram. Must be a positive integer that is &gt;= 2.</param>
+            <param name="numberOfSignificantValueDigits">The number of significant decimal digits to which the histogram will maintain value resolution and separation.Must be a non-negative integer between 0 and 5.</param>
+        </member>
+        <member name="M:HdrHistogram.IntHistogram.#ctor(System.Int64,System.Int64,System.Int32)">
+            <summary>
+            Construct a <see cref="T:HdrHistogram.IntHistogram"/> given the lowest and highest values to be tracked and a number of significant decimal digits.
+            Providing a <paramref name="lowestTrackableValue"/> is useful is situations where the units used for the histogram's values are much smaller that the minimal accuracy required.
+            For example when tracking time values stated in nanoseconds, where the minimal accuracy required is a microsecond, the proper value for <paramref name="lowestTrackableValue"/> would be 1000.
+            </summary>
+            <param name="lowestTrackableValue">
+            The lowest value that can be tracked (distinguished from 0) by the histogram.
+            Must be a positive integer that is &gt;= 1. 
+            May be internally rounded down to nearest power of 2.
+            </param>
+            <param name="highestTrackableValue">The highest value to be tracked by the histogram. Must be a positive integer that is &gt;= (2 * <paramref name="lowestTrackableValue"/>).</param>
+            <param name="numberOfSignificantValueDigits">The number of significant decimal digits to which the histogram will maintain value resolution and separation.Must be a non-negative integer between 0 and 5.</param>
+        </member>
+        <member name="M:HdrHistogram.IntHistogram.#ctor(System.Int64,System.Int64,System.Int64,System.Int32)">
+            <summary>
+            Construct a <see cref="T:HdrHistogram.IntHistogram"/> given the lowest and highest values to be tracked and a number of significant decimal digits.
+            </summary>
+            <param name="instanceId">An identifier for this instance.</param>
+            <param name="lowestTrackableValue">The lowest value that can be tracked (distinguished from 0) by the histogram.
+            Must be a positive integer that is &gt;= 1.
+            May be internally rounded down to nearest power of 2.
+            </param>
+            <param name="highestTrackableValue">The highest value to be tracked by the histogram.
+            Must be a positive integer that is &gt;= (2 * lowestTrackableValue).
+            </param>
+            <param name="numberOfSignificantValueDigits">
+            The number of significant decimal digits to which the histogram will maintain value resolution and separation. 
+            Must be a non-negative integer between 0 and 5.
+            </param>
+            <remarks>
+            Providing a lowestTrackableValue is useful in situations where the units used for the histogram's values are much 
+            smaller that the minimal accuracy required.
+            For example when tracking time values stated in ticks (100 nanoseconds), where the minimal accuracy required is a
+            microsecond, the proper value for lowestTrackableValue would be 10.
+            </remarks>
+        </member>
+        <member name="P:HdrHistogram.IntHistogram.TotalCount">
+            <summary>
+            Gets the total number of recorded values.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.IntHistogram.WordSizeInBytes">
+            <summary>
+            Returns the word size of this implementation
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.IntHistogram.MaxAllowableCount">
+            <summary>
+            The maximum value a count can be for any given bucket.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.IntHistogram.Copy">
+            <summary>
+            Create a copy of this histogram, complete with data and everything.
+            </summary>
+            <returns>A distinct copy of this histogram.</returns>
+        </member>
+        <member name="M:HdrHistogram.IntHistogram.GetCountAtIndex(System.Int32)">
+            <summary>
+            Gets the number of recorded values at a given index.
+            </summary>
+            <param name="index">The index to get the count for</param>
+            <returns>The number of recorded values at the given index.</returns>
+        </member>
+        <member name="M:HdrHistogram.IntHistogram.SetCountAtIndex(System.Int32,System.Int64)">
+            <summary>
+            Sets the count at the given index.
+            </summary>
+            <param name="index">The index to be set</param>
+            <param name="value">The value to set</param>
+        </member>
+        <member name="M:HdrHistogram.IntHistogram.IncrementCountAtIndex(System.Int32)">
+            <summary>
+            Increments the count at the given index. Will also increment the <see cref="P:HdrHistogram.HistogramBase.TotalCount"/>.
+            </summary>
+            <param name="index">The index to increment the count at.</param>
+        </member>
+        <member name="M:HdrHistogram.IntHistogram.AddToCountAtIndex(System.Int32,System.Int64)">
+            <summary>
+            Adds the specified amount to the count of the provided index. Also increments the <see cref="P:HdrHistogram.HistogramBase.TotalCount"/> by the same amount.
+            </summary>
+            <param name="index">The index to increment.</param>
+            <param name="addend">The amount to increment by.</param>
+        </member>
+        <member name="M:HdrHistogram.IntHistogram.ClearCounts">
+            <summary>
+            Clears the counts of this implementation.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.IntHistogram.CopyCountsInto(System.Int64[])">
+            <summary>
+            Copies the internal counts array into the supplied array.
+            </summary>
+            <param name="target">The array to write each count value into.</param>
+        </member>
+        <member name="T:HdrHistogram.IRecorder">
+            <summary>
+            Provides methods to record values.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.IRecorder.RecordValue(System.Int64)">
+            <summary>
+            Records a value in the histogram
+            </summary>
+            <param name="value">The value to be recorded</param>
+            <exception cref="T:System.IndexOutOfRangeException">if value is exceeds highestTrackableValue</exception>
+        </member>
+        <member name="M:HdrHistogram.IRecorder.RecordValueWithCount(System.Int64,System.Int64)">
+            <summary>
+            Record a value in the histogram (adding to the value's current count)
+            </summary>
+            <param name="value">The value to be recorded</param>
+            <param name="count">The number of occurrences of this value to record</param>
+            <exception cref="T:System.IndexOutOfRangeException">if value is exceeds highestTrackableValue</exception>
+        </member>
+        <member name="M:HdrHistogram.IRecorder.RecordValueWithExpectedInterval(System.Int64,System.Int64)">
+            <summary>
+            Record a value in the histogram.
+            </summary>
+            <param name="value">The value to record</param>
+            <param name="expectedIntervalBetweenValueSamples">If <paramref name="expectedIntervalBetweenValueSamples"/> is larger than 0, add auto-generated value records as appropriate if <paramref name="value"/> is larger than <paramref name="expectedIntervalBetweenValueSamples"/></param>
+            <exception cref="T:System.IndexOutOfRangeException">if value is exceeds highestTrackableValue</exception>
+            <remarks>
+            To compensate for the loss of sampled values when a recorded value is larger than the expected interval between value samples, 
+            Histogram will auto-generate an additional series of decreasingly-smaller (down to the expectedIntervalBetweenValueSamples) value records.
+            <para>
+            Note: This is a at-recording correction method, as opposed to the post-recording correction method provided by currently unimplemented <c>CopyCorrectedForCoordinatedOmission</c> method.
+            The two methods are mutually exclusive, and only one of the two should be be used on a given data set to correct for the same coordinated omission issue.
+            </para>
+            See notes in the description of the Histogram calls for an illustration of why this corrective behavior is important.
+            </remarks>
+        </member>
+        <member name="T:HdrHistogram.Iteration.AbstractHistogramEnumerator">
+            <summary>
+            Provide functionality for enumerating over histogram counts.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.Iteration.AbstractHistogramEnumerator.HasNext">
+            <summary>
+             Returns <c>true</c> if the iteration has more elements. (In other words, returns true if next would return an element rather than throwing an exception.)
+            </summary>
+            <returns><c>true</c> if the iterator has more elements.</returns>
+        </member>
+        <member name="M:HdrHistogram.Iteration.AbstractHistogramEnumerator.Next">
+            <summary>
+            Returns the next element in the iteration.
+            </summary>
+            <returns>the <see cref="T:HdrHistogram.Iteration.HistogramIterationValue"/> associated with the next element in the iteration.</returns>
+        </member>
+        <member name="T:HdrHistogram.Iteration.AllValueEnumerable">
+            <summary>
+            An enumerator of <see cref="T:HdrHistogram.Iteration.HistogramIterationValue"/> through the histogram using a <see cref="T:HdrHistogram.Iteration.AllValuesEnumerator"/>
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.Iteration.AllValueEnumerable.#ctor(HdrHistogram.HistogramBase)">
+            <summary>
+            The constructor for the <see cref="T:HdrHistogram.Iteration.AllValueEnumerable"/>
+            </summary>
+            <param name="histogram">The <see cref="T:HdrHistogram.HistogramBase"/> to enumerate the values from.</param>
+        </member>
+        <member name="T:HdrHistogram.Iteration.AllValuesEnumerator">
+            <summary>
+            Used for iterating through histogram values using the finest granularity steps supported by the underlying
+            representation.The iteration steps through all possible unit value levels, regardless of whether or not
+            there were recorded values for that value level, and terminates when all recorded histogram values are exhausted.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.Iteration.AllValuesEnumerator.#ctor(HdrHistogram.HistogramBase)">
+            <summary>
+            Constructor for the <see cref="T:HdrHistogram.Iteration.AllValuesEnumerator"/>.
+            </summary>
+            <param name="histogram">The histogram this iterator will operate on</param>
+        </member>
+        <member name="T:HdrHistogram.Iteration.HistogramIterationValue">
+            <summary>
+            Represents a value point iterated through in a Histogram, with associated stats.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.Iteration.HistogramIterationValue.ValueIteratedTo">
+            <summary>
+            The actual value level that was iterated to by the iterator
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.Iteration.HistogramIterationValue.ValueIteratedFrom">
+            <summary>
+            The actual value level that was iterated from by the iterator
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.Iteration.HistogramIterationValue.CountAtValueIteratedTo">
+            <summary>
+            The count of recorded values in the histogram that exactly match this [lowestEquivalentValue(valueIteratedTo)...highestEquivalentValue(valueIteratedTo)] value range.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.Iteration.HistogramIterationValue.CountAddedInThisIterationStep">
+            <summary>
+            The count of recorded values in the histogram that were added to the totalCountToThisValue(below) as a result on this iteration step. Since multiple iteration steps may occur with overlapping equivalent value ranges, the count may be lower than the count found at the value (e.g.multiple linear steps or percentile levels can occur within a single equivalent value range)
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.Iteration.HistogramIterationValue.TotalCountToThisValue">
+            <summary>
+            The total count of all recorded values in the histogram at values equal or smaller than valueIteratedTo.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.Iteration.HistogramIterationValue.TotalValueToThisValue">
+            <summary>
+            The sum of all recorded values in the histogram at values equal or smaller than valueIteratedTo.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.Iteration.HistogramIterationValue.Percentile">
+            <summary>
+            The percentile of recorded values in the histogram at values equal or smaller than valueIteratedTo.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.Iteration.HistogramIterationValue.PercentileLevelIteratedTo">
+            <summary>
+            The percentile level that the iterator returning this HistogramIterationValue had iterated to.
+            Generally, percentileLevelIteratedTo will be equal to or smaller than percentile, but the same value point can contain multiple iteration levels for some iterators. 
+            e.g. a PercentileEnumerator can stop multiple times in the exact same value point (if the count at that value covers a range of multiple percentiles in the requested percentile iteration points).
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.Iteration.HistogramIterationValue.IsLastValue">
+            <summary>
+            Indicates if this item is to be considered the last value in the set.
+            </summary>
+            <returns>Returns <c>true</c> if it is the last value, else <c>false</c>.</returns>
+        </member>
+        <member name="M:HdrHistogram.Iteration.HistogramIterationValue.ToString">
+            <summary>
+            Returns a string that represents the current object.
+            </summary>
+            <returns>
+            A string that represents the current object.
+            </returns>
+        </member>
+        <member name="T:HdrHistogram.Iteration.PercentileEnumerable">
+            <summary>
+            An enumerator of <see cref="T:HdrHistogram.Iteration.HistogramIterationValue"/> through the histogram using a <see cref="T:HdrHistogram.Iteration.PercentileEnumerator"/>
+            </summary>
+        </member>
+        <member name="T:HdrHistogram.Iteration.PercentileEnumerator">
+            <summary>
+            Used for iterating through histogram values according to percentile levels.The iteration is
+            performed in steps that start at 0% and reduce their distance to 100% according to the
+            <i>percentileTicksPerHalfDistance</i> parameter, ultimately reaching 100% when all recorded histogram
+            values are exhausted.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.Iteration.PercentileEnumerator.#ctor(HdrHistogram.HistogramBase,System.Int32)">
+            <summary>
+            The constructor for the <see cref="T:HdrHistogram.Iteration.PercentileEnumerator"/>
+            </summary>
+            <param name="histogram">The histogram this iterator will operate on</param>
+            <param name="percentileTicksPerHalfDistance">The number of iteration steps per half-distance to 100%.</param>
+        </member>
+        <member name="T:HdrHistogram.Iteration.RecordedValuesEnumerable">
+            <summary>
+            An enumerator of <see cref="T:HdrHistogram.Iteration.HistogramIterationValue"/> through the histogram using a <see cref="T:HdrHistogram.Iteration.RecordedValuesEnumerator"/>
+            </summary>
+        </member>
+        <member name="T:HdrHistogram.Iteration.RecordedValuesEnumerator">
+            <summary>
+            An enumerator that enumerate over all non-zero values.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.Iteration.RecordedValuesEnumerator.#ctor(HdrHistogram.HistogramBase)">
+            <summary>
+            The constructor for <see cref="T:HdrHistogram.Iteration.RecordedValuesEnumerator"/>
+            </summary>
+            <param name="histogram">The histogram this iterator will operate on</param>
+        </member>
+        <member name="T:HdrHistogram.LongConcurrentHistogram">
+            <summary>
+            An integer values High Dynamic Range (HDR) Histogram that supports safe concurrent recording operations.
+            </summary>
+            <remarks>
+            A <see cref="T:HdrHistogram.LongConcurrentHistogram"/> guarantees lossless recording of values into the histogram even when the histogram is updated by multiple threads.
+            <p>
+            It is important to note that concurrent recording is the only thread-safe behavior provided by <seealso cref="T:HdrHistogram.LongConcurrentHistogram"/>.
+            It provides no implicit synchronization that would prevent the contents of the histogram from changing during other operations.
+            These non-synchronised operations include queries, iterations, copies, or addition operations on the histogram. 
+            Concurrent updates that would safely work in the presence of queries, copies, or additions of histogram objects should use the <seealso cref="T:HdrHistogram.Recorder"/> which is intended for this purpose.
+            </p>
+            </remarks>
+        </member>
+        <member name="M:HdrHistogram.LongConcurrentHistogram.#ctor(System.Int64,System.Int64,System.Int32)">
+            <summary>
+            Construct a <see cref="T:HdrHistogram.LongConcurrentHistogram"/> given the lowest and highest values to be tracked and a number of significant decimal digits.
+            Providing a <paramref name="lowestTrackableValue"/> is useful is situations where the units used for the histogram's values are much smaller that the minimal accuracy required. 
+            For example when tracking time values stated in nanoseconds, where the minimal accuracy required is a microsecond, the proper value for <paramref name="lowestTrackableValue"/> would be 1000.
+            </summary>
+            <param name="lowestTrackableValue">
+            The lowest value that can be tracked (distinguished from 0) by the histogram.
+            Must be a positive integer that is &gt;= 1. 
+            May be internally rounded down to nearest power of 2.
+            </param>
+            <param name="highestTrackableValue">The highest value to be tracked by the histogram. Must be a positive integer that is &gt;= (2 * <paramref name="lowestTrackableValue"/>).</param>
+            <param name="numberOfSignificantValueDigits">The number of significant decimal digits to which the histogram will maintain value resolution and separation.
+            Must be a non-negative integer between 0 and 5.</param>
+        </member>
+        <member name="M:HdrHistogram.LongConcurrentHistogram.#ctor(System.Int64,System.Int64,System.Int64,System.Int32)">
+            <summary>
+            Construct a <see cref="T:HdrHistogram.LongConcurrentHistogram"/> given the lowest and highest values to be tracked and a number of significant decimal digits.
+            </summary>
+            <param name="instanceId">An identifier for this instance.</param>
+            <param name="lowestTrackableValue">The lowest value that can be tracked (distinguished from 0) by the histogram.
+            Must be a positive integer that is &gt;= 1.
+            May be internally rounded down to nearest power of 2.
+            </param>
+            <param name="highestTrackableValue">The highest value to be tracked by the histogram.
+            Must be a positive integer that is &gt;= (2 * lowestTrackableValue).
+            </param>
+            <param name="numberOfSignificantValueDigits">
+            The number of significant decimal digits to which the histogram will maintain value resolution and separation. 
+            Must be a non-negative integer between 0 and 5.
+            </param>
+            <remarks>
+            Providing a lowestTrackableValue is useful in situations where the units used for the histogram's values are much 
+            smaller that the minimal accuracy required.
+            For example when tracking time values stated in ticks (100 nanoseconds), where the minimal accuracy required is a
+            microsecond, the proper value for lowestTrackableValue would be 10.
+            </remarks>
+        </member>
+        <member name="P:HdrHistogram.LongConcurrentHistogram.TotalCount">
+            <summary>
+            Gets the total number of recorded values.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.LongConcurrentHistogram.WordSizeInBytes">
+            <summary>
+            Returns the word size of this implementation
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.LongConcurrentHistogram.MaxAllowableCount">
+            <summary>
+            The maximum value a count can be for any given bucket.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.LongConcurrentHistogram.Copy">
+            <summary>
+            Copies the data from this instance to a new instance.
+            </summary>
+            <returns>A new copy of this instance.</returns>
+        </member>
+        <member name="M:HdrHistogram.LongConcurrentHistogram.GetCountAtIndex(System.Int32)">
+            <summary>
+            Gets the number of recorded values at a given index.
+            </summary>
+            <param name="index">The index to get the count for</param>
+            <returns>The number of recorded values at the given index.</returns>
+        </member>
+        <member name="M:HdrHistogram.LongConcurrentHistogram.SetCountAtIndex(System.Int32,System.Int64)">
+            <summary>
+            Sets the count at the given index.
+            </summary>
+            <param name="index">The index to be set</param>
+            <param name="value">The value to set</param>
+        </member>
+        <member name="M:HdrHistogram.LongConcurrentHistogram.IncrementCountAtIndex(System.Int32)">
+            <summary>
+            Increments the count at the given index. Will also increment the <see cref="P:HdrHistogram.HistogramBase.TotalCount"/>.
+            </summary>
+            <param name="index">The index to increment the count at.</param>
+        </member>
+        <member name="M:HdrHistogram.LongConcurrentHistogram.AddToCountAtIndex(System.Int32,System.Int64)">
+            <summary>
+            Adds the specified amount to the count of the provided index. Also increments the <see cref="P:HdrHistogram.HistogramBase.TotalCount"/> by the same amount.
+            </summary>
+            <param name="index">The index to increment.</param>
+            <param name="addend">The amount to increment by.</param>
+        </member>
+        <member name="M:HdrHistogram.LongConcurrentHistogram.ClearCounts">
+            <summary>
+            Clears the counts of this implementation.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.LongConcurrentHistogram.CopyCountsInto(System.Int64[])">
+            <summary>
+            Copies the internal counts array into the supplied array.
+            </summary>
+            <param name="target">The array to write each count value into.</param>
+        </member>
+        <member name="T:HdrHistogram.LongHistogram">
+            <summary>
+            A High Dynamic Range (HDR) Histogram
+            </summary>
+            <remarks>
+            Histogram supports the recording and analyzing sampled data value counts across a configurable integer value
+            range with configurable value precision within the range.
+            Value precision is expressed as the number of significant digits in the value recording, and provides control 
+            over value quantization behavior across the value range and the subsequent value resolution at any given level.
+            <para>
+            For example, a Histogram could be configured to track the counts of observed integer values between 0 and
+            36,000,000,000 while maintaining a value precision of 3 significant digits across that range.
+            Value quantization within the range will thus be no larger than 1/1,000th (or 0.1%) of any value.
+            This example Histogram could be used to track and analyze the counts of observed response times ranging between
+            100 nanoseconds and 1 hour in magnitude, while maintaining a value resolution of 100 nanosecond up to 
+            100 microseconds, a resolution of 1 millisecond(or better) up to one second, and a resolution of 1 second 
+            (or better) up to 1,000 seconds.
+            At it's maximum tracked value(1 hour), it would still maintain a resolution of 3.6 seconds (or better).
+            </para>
+            Histogram tracks value counts in <see cref="T:System.Int64"/> fields.
+            </remarks>
+        </member>
+        <member name="M:HdrHistogram.LongHistogram.#ctor(System.Int64,System.Int32)">
+            <summary>
+            Construct a Histogram given the highest value to be tracked and a number of significant decimal digits. 
+            The histogram will be constructed to implicitly track(distinguish from 0) values as low as 1.
+            </summary>
+            <param name="highestTrackableValue">The highest value to be tracked by the histogram. Must be a positive integer that is &gt;= 2.</param>
+            <param name="numberOfSignificantValueDigits">The number of significant decimal digits to which the histogram will maintain value resolution and separation.
+            Must be a non-negative integer between 0 and 5.
+            </param>
+        </member>
+        <member name="M:HdrHistogram.LongHistogram.#ctor(System.Int64,System.Int64,System.Int32)">
+            <summary>
+            Construct a <see cref="T:HdrHistogram.LongHistogram"/> given the lowest and highest values to be tracked and a number of significant decimal digits.
+            Providing a <paramref name="lowestTrackableValue"/> is useful is situations where the units used for the histogram's values are much smaller that the minimal accuracy required. 
+            For example when tracking time values stated in nanosecond units, where the minimal accuracy required is a microsecond, the proper value for <paramref name="lowestTrackableValue"/> would be 1000.
+            </summary>
+            <param name="lowestTrackableValue">
+            The lowest value that can be tracked (distinguished from 0) by the histogram.
+            Must be a positive integer that is &gt;= 1. 
+            May be internally rounded down to nearest power of 2.
+            </param>
+            <param name="highestTrackableValue">The highest value to be tracked by the histogram. Must be a positive integer that is &gt;= (2 * <paramref name="lowestTrackableValue"/>).</param>
+            <param name="numberOfSignificantValueDigits">The number of significant decimal digits to which the histogram will maintain value resolution and separation.
+            Must be a non-negative integer between 0 and 5.
+            </param>
+        </member>
+        <member name="M:HdrHistogram.LongHistogram.#ctor(System.Int64,System.Int64,System.Int64,System.Int32)">
+            <summary>
+            Construct a <see cref="T:HdrHistogram.LongHistogram"/> given the lowest and highest values to be tracked and a number of significant decimal digits.
+            </summary>
+            <param name="instanceId">An identifier for this instance.</param>
+            <param name="lowestTrackableValue">The lowest value that can be tracked (distinguished from 0) by the histogram.
+            Must be a positive integer that is &gt;= 1.
+            May be internally rounded down to nearest power of 2.
+            </param>
+            <param name="highestTrackableValue">The highest value to be tracked by the histogram.
+            Must be a positive integer that is &gt;= (2 * lowestTrackableValue).
+            </param>
+            <param name="numberOfSignificantValueDigits">
+            The number of significant decimal digits to which the histogram will maintain value resolution and separation. 
+            Must be a non-negative integer between 0 and 5.
+            </param>
+            <remarks>
+            Providing a lowestTrackableValue is useful in situations where the units used for the histogram's values are much 
+            smaller that the minimal accuracy required.
+            For example when tracking time values stated in ticks (100 nanoseconds), where the minimal accuracy required is a
+            microsecond, the proper value for lowestTrackableValue would be 10.
+            </remarks>
+        </member>
+        <member name="P:HdrHistogram.LongHistogram.TotalCount">
+            <summary>
+            Gets the total number of recorded values.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.LongHistogram.WordSizeInBytes">
+            <summary>
+            Returns the word size of this implementation
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.LongHistogram.MaxAllowableCount">
+            <summary>
+            The maximum value a count can be for any given bucket.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.LongHistogram.Copy">
+            <summary>
+            Create a copy of this histogram, complete with data and everything.
+            </summary>
+            <returns>A distinct copy of this histogram.</returns>
+        </member>
+        <member name="M:HdrHistogram.LongHistogram.GetCountAtIndex(System.Int32)">
+            <summary>
+            Gets the number of recorded values at a given index.
+            </summary>
+            <param name="index">The index to get the count for</param>
+            <returns>The number of recorded values at the given index.</returns>
+        </member>
+        <member name="M:HdrHistogram.LongHistogram.SetCountAtIndex(System.Int32,System.Int64)">
+            <summary>
+            Sets the count at the given index.
+            </summary>
+            <param name="index">The index to be set</param>
+            <param name="value">The value to set</param>
+        </member>
+        <member name="M:HdrHistogram.LongHistogram.IncrementCountAtIndex(System.Int32)">
+            <summary>
+            Increments the count at the given index. Will also increment the <see cref="P:HdrHistogram.HistogramBase.TotalCount"/>.
+            </summary>
+            <param name="index">The index to increment the count at.</param>
+        </member>
+        <member name="M:HdrHistogram.LongHistogram.AddToCountAtIndex(System.Int32,System.Int64)">
+            <summary>
+            Adds the specified amount to the count of the provided index. Also increments the <see cref="P:HdrHistogram.HistogramBase.TotalCount"/> by the same amount.
+            </summary>
+            <param name="index">The index to increment.</param>
+            <param name="addend">The amount to increment by.</param>
+        </member>
+        <member name="M:HdrHistogram.LongHistogram.ClearCounts">
+            <summary>
+            Clears the counts of this implementation.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.LongHistogram.CopyCountsInto(System.Int64[])">
+            <summary>
+            Copies the internal counts array into the supplied array.
+            </summary>
+            <param name="target">The array to write each count value into.</param>
+        </member>
+        <member name="T:HdrHistogram.OutputScalingFactor">
+            <summary>
+            Provides constants to use in selecting a scaling factor for output of a histograms recordings.
+            </summary>
+        </member>
+        <member name="F:HdrHistogram.OutputScalingFactor.None">
+            <summary>
+            For use when values are recorded and reported in the same unit of measurement.
+            </summary>
+        </member>
+        <member name="F:HdrHistogram.OutputScalingFactor.TimeStampToMicroseconds">
+            <summary>
+            For use when values are recorded with <seealso cref="M:System.Diagnostics.Stopwatch.GetTimestamp"/> and output should be reported in microseconds.
+            </summary>
+        </member>
+        <member name="F:HdrHistogram.OutputScalingFactor.TimeStampToMilliseconds">
+            <summary>
+            For use when values are recorded with <seealso cref="M:System.Diagnostics.Stopwatch.GetTimestamp"/> and output should be reported in milliseconds.
+            </summary>
+        </member>
+        <member name="F:HdrHistogram.OutputScalingFactor.TimeStampToSeconds">
+            <summary>
+            For use when values are recorded with <seealso cref="M:System.Diagnostics.Stopwatch.GetTimestamp"/> and output should be reported in seconds.
+            </summary>
+        </member>
+        <member name="T:HdrHistogram.Persistence.CountsDecoder">
+            <summary>
+            Provides a method to get the correct <see cref="T:HdrHistogram.Persistence.ICountsDecoder"/> implementation for a given word size.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.Persistence.CountsDecoder.GetDecoderForWordSize(System.Int32)">
+            <summary>
+            Gets the correct implementation of a <see cref="T:HdrHistogram.Persistence.ICountsDecoder"/> for the supplied word size.
+            </summary>
+            <param name="wordSize">The word size of the encoded histogram</param>
+            <returns>A <see cref="T:HdrHistogram.Persistence.ICountsDecoder"/> implementation.</returns>
+        </member>
+        <member name="T:HdrHistogram.Persistence.ICountsDecoder">
+            <summary>
+            Defines methods to read counts values from a potentially encoded <see cref="T:HdrHistogram.Utilities.ByteBuffer"/>.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.Persistence.ICountsDecoder.WordSize">
+            <summary>
+            The target word size for the encoder.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.Persistence.ICountsDecoder.ReadCounts(HdrHistogram.Utilities.ByteBuffer,System.Int32,System.Int32,System.Action{System.Int32,System.Int64})">
+            <summary>
+            Decodes from a supplied <see cref="T:HdrHistogram.Utilities.ByteBuffer"/> count values and calls a delegate with index and count.
+            </summary>
+            <param name="sourceBuffer">The source of the data.</param>
+            <param name="lengthInBytes">The length in bytes to read.</param>
+            <param name="maxIndex"></param>
+            <param name="setCount">A delegate to call with the count for a given index.</param>
+            <returns>The index that was read to.</returns>
+        </member>
+        <member name="T:HdrHistogram.Recorder">
+            <summary>
+            Records integer values, and provides stable interval <see cref="T:HdrHistogram.HistogramBase"/> samples from live recorded data without interrupting or stalling active recording of values.
+            Each interval histogram provided contains all value counts accumulated since the previous interval histogram was taken.
+            </summary>
+            <remarks>
+            This pattern is commonly used in logging interval histogram information while recording is ongoing.
+            Recording calls are wait-free on architectures that support atomic increment operations, and are lock-free on architectures that do not.
+            </remarks>
+        </member>
+        <member name="M:HdrHistogram.Recorder.#ctor(System.Int64,System.Int64,System.Int32,HdrHistogram.HistogramFactoryDelegate)">
+            <summary>
+            Creates a recorder that will delegate recording to histograms created from these parameters.
+            </summary>
+            <param name="lowestDiscernibleValue">The lowest value that can be tracked (distinguished from 0) by the histogram.
+            Must be a positive integer that is &gt;= 1.
+            May be internally rounded down to nearest power of 2.
+            </param>
+            <param name="highestTrackableValue">The highest value to be tracked by the histogram.
+            Must be a positive integer that is &gt;= (2 * lowestTrackableValue).
+            </param>
+            <param name="numberOfSignificantValueDigits">
+            The number of significant decimal digits to which the histogram will maintain value resolution and separation. 
+            Must be a non-negative integer between 0 and 5.
+            </param>
+            <param name="histogramFactory">The factory to be used to actually create instances of <seealso cref="T:HdrHistogram.HistogramBase"/>.</param>
+        </member>
+        <member name="M:HdrHistogram.Recorder.RecordValue(System.Int64)">
+            <summary>
+            Records a value in the histogram
+            </summary>
+            <param name="value">The value to be recorded</param>
+            <exception cref="T:System.IndexOutOfRangeException">if value is exceeds highestTrackableValue</exception>
+        </member>
+        <member name="M:HdrHistogram.Recorder.RecordValueWithCount(System.Int64,System.Int64)">
+            <summary>
+            Record a value in the histogram (adding to the value's current count)
+            </summary>
+            <param name="value">The value to be recorded</param>
+            <param name="count">The number of occurrences of this value to record</param>
+            <exception cref="T:System.IndexOutOfRangeException">if value is exceeds highestTrackableValue</exception>
+        </member>
+        <member name="M:HdrHistogram.Recorder.RecordValueWithExpectedInterval(System.Int64,System.Int64)">
+            <summary>
+            Record a value in the histogram.
+            </summary>
+            <param name="value">The value to record</param>
+            <param name="expectedIntervalBetweenValueSamples">If <paramref name="expectedIntervalBetweenValueSamples"/> is larger than 0, add auto-generated value records as appropriate if <paramref name="value"/> is larger than <paramref name="expectedIntervalBetweenValueSamples"/></param>
+            <exception cref="T:System.IndexOutOfRangeException">if value is exceeds highestTrackableValue</exception>
+            <remarks>
+            To compensate for the loss of sampled values when a recorded value is larger than the expected interval between value samples, 
+            Histogram will auto-generate an additional series of decreasingly-smaller (down to the expectedIntervalBetweenValueSamples) value records.
+            <para>
+            Note: This is a at-recording correction method, as opposed to the post-recording correction method provided by currently unimplemented <c>CopyCorrectedForCoordinatedOmission</c> method.
+            The two methods are mutually exclusive, and only one of the two should be be used on a given data set to correct for the same coordinated omission issue.
+            </para>
+            See notes in the description of the Histogram calls for an illustration of why this corrective behavior is important.
+            </remarks>
+        </member>
+        <member name="M:HdrHistogram.Recorder.GetIntervalHistogram">
+            <summary>
+            Get a new instance of an interval histogram, which will include a stable, consistent view of all value counts accumulated since the last interval histogram was taken.
+            Calling <see cref="M:HdrHistogram.Recorder.GetIntervalHistogram"/> will reset the value counts, and start accumulating value counts for the next interval.
+            </summary>
+            <returns>A histogram containing the value counts accumulated since the last interval histogram was taken.</returns>
+        </member>
+        <member name="M:HdrHistogram.Recorder.GetIntervalHistogram(HdrHistogram.HistogramBase)">
+            <summary>
+            Get a new instance of an interval histogram, which will include a stable, consistent view of all value counts accumulated since the last interval histogram was taken.
+            Calling <see cref="M:HdrHistogram.Recorder.GetIntervalHistogram"/> will reset the value counts, and start accumulating value counts for the next interval.
+            </summary>
+            <param name="histogramToRecycle">a previously returned interval histogram that may be recycled to avoid allocation and copy operations.</param>
+            <returns>A histogram containing the value counts accumulated since the last interval histogram was taken.</returns>
+            <remarks>
+            <see cref="M:HdrHistogram.Recorder.GetIntervalHistogram(HdrHistogram.HistogramBase)"/> accepts a previously returned interval histogram that can be recycled internally to avoid allocation and content copying operations.
+            It is therefore significantly more efficient for repeated use than <see cref="M:HdrHistogram.Recorder.GetIntervalHistogram"/> and <see cref="M:HdrHistogram.Recorder.GetIntervalHistogramInto(HdrHistogram.HistogramBase)"/>.
+            The provided <paramref name="histogramToRecycle"/> must be either be null or an interval histogram returned by a previous call to <see cref="M:HdrHistogram.Recorder.GetIntervalHistogram(HdrHistogram.HistogramBase)"/> or <see cref="M:HdrHistogram.Recorder.GetIntervalHistogram"/>.
+            NOTE: The caller is responsible for not recycling the same returned interval histogram more than once. 
+            If the same interval histogram instance is recycled more than once, behavior is undefined.
+            </remarks>
+        </member>
+        <member name="M:HdrHistogram.Recorder.GetIntervalHistogramInto(HdrHistogram.HistogramBase)">
+            <summary>
+            Place a copy of the value counts accumulated since accumulated (since the last interval histogram was taken) into <paramref name="targetHistogram"/>.
+            This will overwrite the existing data in <paramref name="targetHistogram"/>.
+            Calling <see cref="M:HdrHistogram.Recorder.GetIntervalHistogramInto(HdrHistogram.HistogramBase)"/> will reset the value counts, and start accumulating value counts for the next interval.
+            </summary>
+            <param name="targetHistogram">The histogram into which the interval histogram's data should be copied.</param>
+        </member>
+        <member name="M:HdrHistogram.Recorder.Reset">
+            <summary>
+            Reset any value counts accumulated thus far.
+            </summary>
+        </member>
+        <member name="T:HdrHistogram.ShortHistogram">
+            <summary>
+            A High Dynamic Range (HDR) Histogram using a <see cref="T:System.Int16"/> count type
+            </summary>
+            <remarks>
+            Histogram supports the recording and analyzing sampled data value counts across a configurable integer value
+            range with configurable value precision within the range.
+            Value precision is expressed as the number of significant digits in the value recording, and provides control 
+            over value quantization behavior across the value range and the subsequent value resolution at any given level.
+            <para>
+            For example, a Histogram could be configured to track the counts of observed integer values between 0 and
+            36,000,000,000 while maintaining a value precision of 3 significant digits across that range.
+            Value quantization within the range will thus be no larger than 1/1,000th (or 0.1%) of any value.
+            This example Histogram could be used to track and analyze the counts of observed response times ranging between
+            100 nanoseconds and 1 hour in magnitude, while maintaining a value resolution of 100 nanosecond up to 
+            100 microseconds, a resolution of 1 millisecond(or better) up to one second, and a resolution of 1 second 
+            (or better) up to 1,000 seconds.
+            At it's maximum tracked value(1 hour), it would still maintain a resolution of 3.6 seconds (or better).
+            </para>
+            Histogram tracks value counts in <see cref="T:System.Int16"/> fields.
+            Other field types are available in the <see cref="T:HdrHistogram.IntHistogram"/> and <see cref="T:HdrHistogram.LongHistogram"/> 
+            implementations of <see cref="T:HdrHistogram.HistogramBase"/>.
+            </remarks>
+        </member>
+        <member name="M:HdrHistogram.ShortHistogram.#ctor(System.Int64,System.Int32)">
+            <summary>
+            Construct a <see cref="T:HdrHistogram.ShortHistogram"/> given the highest value to be tracked and a number of significant decimal digits. 
+            The histogram will be constructed to implicitly track (distinguish from 0) values as low as 1. 
+            </summary>
+            <param name="highestTrackableValue">The highest value to be tracked by the histogram. Must be a positive integer that is &gt;= 2.</param>
+            <param name="numberOfSignificantValueDigits">The number of significant decimal digits to which the histogram will maintain value resolution and separation.Must be a non-negative integer between 0 and 5.</param>
+        </member>
+        <member name="M:HdrHistogram.ShortHistogram.#ctor(System.Int64,System.Int64,System.Int32)">
+            <summary>
+            Construct a <see cref="T:HdrHistogram.ShortHistogram"/> given the lowest and highest values to be tracked and a number of significant decimal digits.
+            Providing a <paramref name="lowestTrackableValue"/> is useful is situations where the units used for the histogram's values are much smaller that the minimal accuracy required. 
+            For example when tracking time values stated in nanoseconds, where the minimal accuracy required is a microsecond, the proper value for <paramref name="lowestTrackableValue"/> would be 1000.
+            </summary>
+            <param name="lowestTrackableValue">
+            The lowest value that can be tracked (distinguished from 0) by the histogram.
+            Must be a positive integer that is &gt;= 1. 
+            May be internally rounded down to nearest power of 2.
+            </param>
+            <param name="highestTrackableValue">The highest value to be tracked by the histogram. Must be a positive integer that is &gt;= (2 * <paramref name="lowestTrackableValue"/>).</param>
+            <param name="numberOfSignificantValueDigits">The number of significant decimal digits to which the histogram will maintain value resolution and separation.
+            Must be a non-negative integer between 0 and 5.</param>
+        </member>
+        <member name="M:HdrHistogram.ShortHistogram.#ctor(System.Int64,System.Int64,System.Int64,System.Int32)">
+            <summary>
+            Construct a <see cref="T:HdrHistogram.ShortHistogram"/> given the lowest and highest values to be tracked and a number of significant decimal digits.
+            </summary>
+            <param name="instanceId">An identifier for this instance.</param>
+            <param name="lowestTrackableValue">The lowest value that can be tracked (distinguished from 0) by the histogram.
+            Must be a positive integer that is &gt;= 1.
+            May be internally rounded down to nearest power of 2.
+            </param>
+            <param name="highestTrackableValue">The highest value to be tracked by the histogram.
+            Must be a positive integer that is &gt;= (2 * lowestTrackableValue).
+            </param>
+            <param name="numberOfSignificantValueDigits">
+            The number of significant decimal digits to which the histogram will maintain value resolution and separation. 
+            Must be a non-negative integer between 0 and 5.
+            </param>
+            <remarks>
+            Providing a lowestTrackableValue is useful in situations where the units used for the histogram's values are much 
+            smaller that the minimal accuracy required.
+            For example when tracking time values stated in ticks (100 nanoseconds), where the minimal accuracy required is a
+            microsecond, the proper value for lowestTrackableValue would be 10.
+            </remarks>
+        </member>
+        <member name="P:HdrHistogram.ShortHistogram.TotalCount">
+            <summary>
+            Gets the total number of recorded values.
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.ShortHistogram.WordSizeInBytes">
+            <summary>
+            Returns the word size of this implementation
+            </summary>
+        </member>
+        <member name="P:HdrHistogram.ShortHistogram.MaxAllowableCount">
+            <summary>
+            The maximum value a count can be for any given bucket.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.ShortHistogram.Copy">
+            <summary>
+            Create a copy of this histogram, complete with data and everything.
+            </summary>
+            <returns>A distinct copy of this histogram.</returns>
+        </member>
+        <member name="M:HdrHistogram.ShortHistogram.GetCountAtIndex(System.Int32)">
+            <summary>
+            Gets the number of recorded values at a given index.
+            </summary>
+            <param name="index">The index to get the count for</param>
+            <returns>The number of recorded values at the given index.</returns>
+        </member>
+        <member name="M:HdrHistogram.ShortHistogram.SetCountAtIndex(System.Int32,System.Int64)">
+            <summary>
+            Sets the count at the given index.
+            </summary>
+            <param name="index">The index to be set</param>
+            <param name="value">The value to set</param>
+        </member>
+        <member name="M:HdrHistogram.ShortHistogram.IncrementCountAtIndex(System.Int32)">
+            <summary>
+            Increments the count at the given index. Will also increment the <see cref="P:HdrHistogram.HistogramBase.TotalCount"/>.
+            </summary>
+            <param name="index">The index to increment the count at.</param>
+        </member>
+        <member name="M:HdrHistogram.ShortHistogram.AddToCountAtIndex(System.Int32,System.Int64)">
+            <summary>
+            Adds the specified amount to the count of the provided index. Also increments the <see cref="P:HdrHistogram.HistogramBase.TotalCount"/> by the same amount.
+            </summary>
+            <param name="index">The index to increment.</param>
+            <param name="addend">The amount to increment by.</param>
+        </member>
+        <member name="M:HdrHistogram.ShortHistogram.ClearCounts">
+            <summary>
+            Clears the counts of this implementation.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.ShortHistogram.CopyCountsInto(System.Int64[])">
+            <summary>
+            Copies the internal counts array into the supplied array.
+            </summary>
+            <param name="target">The array to write each count value into.</param>
+        </member>
+        <member name="T:HdrHistogram.TimeStamp">
+            <summary>
+            Helper methods to get time periods based in system stopwatch units.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.TimeStamp.Seconds(System.Int64)">
+            <summary>
+            Return a <see cref="T:System.Int64"/> representing the number system timer ticks that occur over the provided number of seconds.
+            </summary>
+            <param name="seconds">A number seconds to represent.</param>
+            <returns>The number of system timer ticks that represent the <paramref name="seconds"/>.</returns>
+        </member>
+        <member name="M:HdrHistogram.TimeStamp.Minutes(System.Int64)">
+            <summary>
+            Return a <see cref="T:System.Int64"/> representing the number system timer ticks that occur over the provided number of minutes.
+            </summary>
+            <param name="minutes">A number minutes to represent.</param>
+            <returns>The number of system timer ticks that represent the <paramref name="minutes"/>.</returns>
+        </member>
+        <member name="M:HdrHistogram.TimeStamp.Hours(System.Int32)">
+            <summary>
+            Return a <see cref="T:System.Int64"/> representing the number system timer ticks that occur over the provided number of hours.
+            </summary>
+            <param name="hours">A number hours to represent.</param>
+            <returns>The number of system timer ticks that represent the <paramref name="hours"/>.</returns>
+        </member>
+        <member name="T:HdrHistogram.Utilities.ArrayExtensions">
+            <summary>
+            Extension methods for Arrays.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.Utilities.ArrayExtensions.IsSequenceEqual``1(``0[],``0[])">
+            <summary>
+            Checks if the two arrays have the same items in the same order.
+            </summary>
+            <typeparam name="T">The type of the items in the arrays.</typeparam>
+            <param name="source">The source array to check.</param>
+            <param name="other">The other array to check against.</param>
+            <returns>Returns <c>true</c> if the arrays are of the same length and each item by index is equal, else <c>false</c>.</returns>
+        </member>
+        <member name="T:HdrHistogram.Utilities.AtomicIntArray">
+            <summary>
+            This is a basic implementation/port, of just the methods that are required internally.
+            </summary>
+        </member>
+        <member name="T:HdrHistogram.Utilities.AtomicLongArray">
+            <summary>
+            This is a basic implementation/port, of just the methods that are required internally.
+            </summary>
+        </member>
+        <member name="T:HdrHistogram.Utilities.Bitwise">
+            <summary>
+            Exposes optimised methods to get Leading Zero Count.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.Utilities.Bitwise.NumberOfLeadingZeros(System.Int64)">
+            <summary>
+            Returns the Leading Zero Count (lzc) of the <paramref name="value"/> for its binary representation.
+            </summary>
+            <param name="value">The value to find the number of leading zeros</param>
+            <returns>The number of leading zeros.</returns>
+        </member>
+        <member name="T:HdrHistogram.Utilities.ByteBuffer">
+            <summary>
+            A byte buffer that tracks position and allows reads and writes of 32 and 64 bit integer values.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.Utilities.ByteBuffer.Allocate(System.Int32)">
+            <summary>
+            Creates a <see cref="T:HdrHistogram.Utilities.ByteBuffer"/> with a specified capacity in bytes.
+            </summary>
+            <param name="bufferCapacity">The capacity of the buffer in bytes</param>
+            <returns>A newly created <see cref="T:HdrHistogram.Utilities.ByteBuffer"/>.</returns>
+        </member>
+        <member name="M:HdrHistogram.Utilities.ByteBuffer.Allocate(System.Byte[])">
+            <summary>
+            Creates a <see cref="T:HdrHistogram.Utilities.ByteBuffer"/> loaded with the provided byte array.
+            </summary>
+            <param name="source">The source byte array to load the buffer with.</param>
+            <returns>A newly created <see cref="T:HdrHistogram.Utilities.ByteBuffer"/>.</returns>
+        </member>
+        <member name="P:HdrHistogram.Utilities.ByteBuffer.Position">
+            <summary>
+            The buffer's current position in the underlying byte array
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.Utilities.ByteBuffer.Capacity">
+            <summary>
+            Returns the capacity of the <see cref="T:HdrHistogram.Utilities.ByteBuffer"/>
+            </summary>
+            <returns>The length of the internal byte array.</returns>
+        </member>
+        <member name="M:HdrHistogram.Utilities.ByteBuffer.Remaining">
+            <summary>
+            The remaining capacity.
+            </summary>
+            <returns>The number of bytes between the current position and the underlying byte array length.</returns>
+        </member>
+        <member name="M:HdrHistogram.Utilities.ByteBuffer.ReadFrom(System.IO.Stream,System.Int32)">
+            <summary>
+            Reads from the provided <see cref="T:System.IO.Stream"/>, into the buffer.
+            </summary>
+            <param name="source">The source stream to read from.</param>
+            <param name="length">The number of bytes to read.</param>
+            <returns>The number of bytes read.</returns>
+        </member>
+        <member name="M:HdrHistogram.Utilities.ByteBuffer.Get">
+            <summary>
+            Gets the current byte and advances the position by one.
+            </summary>
+            <returns>The byte at the current position.</returns>
+        </member>
+        <member name="M:HdrHistogram.Utilities.ByteBuffer.GetShort">
+            <summary>
+            Gets the 16 bit integer (<seealso cref="T:System.Int16"/>) at the current position, and then advances by two.
+            </summary>
+            <returns>The value of the <see cref="T:System.Int16"/> at the current position.</returns>
+        </member>
+        <member name="M:HdrHistogram.Utilities.ByteBuffer.GetInt">
+            <summary>
+            Gets the 32 bit integer (<seealso cref="T:System.Int32"/>) at the current position, and then advances by four.
+            </summary>
+            <returns>The value of the <see cref="T:System.Int32"/> at the current position.</returns>
+        </member>
+        <member name="M:HdrHistogram.Utilities.ByteBuffer.GetLong">
+            <summary>
+            Gets the 64 bit integer (<seealso cref="T:System.Int64"/>) at the current position, and then advances by eight.
+            </summary>
+            <returns>The value of the <see cref="T:System.Int64"/> at the current position.</returns>
+        </member>
+        <member name="M:HdrHistogram.Utilities.ByteBuffer.GetDouble">
+            <summary>
+            Gets the double floating point number (<seealso cref="T:System.Double"/>) at the current position, and then advances by eight.
+            </summary>
+            <returns>The value of the <see cref="T:System.Double"/> at the current position.</returns>
+        </member>
+        <member name="M:HdrHistogram.Utilities.ByteBuffer.Int64BitsToDouble(System.Int64)">
+            <summary>
+            Converts the specified 64-bit signed integer to a double-precision 
+            floating point number. Note: the endianness of this converter does not
+            affect the returned value.
+            </summary>
+            <param name="value">The number to convert. </param>
+            <returns>A double-precision floating point number whose value is equivalent to value.</returns>
+        </member>
+        <member name="M:HdrHistogram.Utilities.ByteBuffer.ToInt64(System.Byte[],System.Int32)">
+            <summary>
+            Returns a 64-bit signed integer converted from eight bytes at a specified position in a byte array.
+            </summary>
+            <param name="value">An array of bytes.</param>
+            <param name="startIndex">The starting position within value.</param>
+            <returns>A 64-bit signed integer formed by eight bytes beginning at startIndex.</returns>
+        </member>
+        <member name="M:HdrHistogram.Utilities.ByteBuffer.CheckedFromBytes(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Checks the arguments for validity before calling FromBytes
+            (which can therefore assume the arguments are valid).
+            </summary>
+            <param name="value">The bytes to convert after checking</param>
+            <param name="startIndex">The index of the first byte to convert</param>
+            <param name="bytesToConvert">The number of bytes to convert</param>
+            <returns></returns>
+        </member>
+        <member name="M:HdrHistogram.Utilities.ByteBuffer.CheckByteArgument(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Checks the given argument for validity.
+            </summary>
+            <param name="value">The byte array passed in</param>
+            <param name="startIndex">The start index passed in</param>
+            <param name="bytesRequired">The number of bytes required</param>
+            <exception cref="T:System.ArgumentNullException">value is a null reference</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            startIndex is less than zero or greater than the length of value minus bytesRequired.
+            </exception>
+        </member>
+        <member name="M:HdrHistogram.Utilities.ByteBuffer.FromBytes(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Returns a value built from the specified number of bytes from the given buffer,
+            starting at index.
+            </summary>
+            <param name="buffer">The data in byte array format</param>
+            <param name="startIndex">The first index to use</param>
+            <param name="bytesToConvert">The number of bytes to use</param>
+            <returns>The value built from the given bytes</returns>
+        </member>
+        <member name="M:HdrHistogram.Utilities.ByteBuffer.Put(System.Byte)">
+            <summary>
+            Writes a byte value to the current position, and advances the position by one.
+            </summary>
+            <param name="value">The byte value to write.</param>
+        </member>
+        <member name="M:HdrHistogram.Utilities.ByteBuffer.PutInt(System.Int32)">
+            <summary>
+            Sets the bytes at the current position to the value of the passed value, and advances the position.
+            </summary>
+            <param name="value">The value to set the current position to.</param>
+        </member>
+        <member name="M:HdrHistogram.Utilities.ByteBuffer.PutInt(System.Int32,System.Int32)">
+            <summary>
+            Sets the bytes at the provided position to the value of the passed value, and does not advance the position.
+            </summary>
+            <param name="index">The position to set the value at.</param>
+            <param name="value">The value to set.</param>
+            <remarks>
+            This can be useful for writing a value into an earlier placeholder e.g. a header property for storing the body length.
+            </remarks>
+        </member>
+        <member name="M:HdrHistogram.Utilities.ByteBuffer.PutLong(System.Int64)">
+            <summary>
+            Sets the bytes at the current position to the value of the passed value, and advances the position.
+            </summary>
+            <param name="value">The value to set the current position to.</param>
+        </member>
+        <member name="M:HdrHistogram.Utilities.ByteBuffer.PutDouble(System.Double)">
+            <summary>
+            Sets the bytes at the current position to the value of the passed value, and advances the position.
+            </summary>
+            <param name="value">The value to set the current position to.</param>
+        </member>
+        <member name="M:HdrHistogram.Utilities.ByteBuffer.ToArray">
+            <summary>
+            Gets a copy of the internal byte array.
+            </summary>
+            <returns>The a copy of the internal byte array.</returns>
+        </member>
+        <member name="M:HdrHistogram.Utilities.ByteBufferExtensions.CompressedCopy(HdrHistogram.Utilities.ByteBuffer,HdrHistogram.Utilities.ByteBuffer,System.Int32)">
+            <summary>
+            Copies compressed contents from <paramref name="source"/> into the <paramref name="target"/> from the <paramref name="targetOffset"/>
+            </summary>
+            <param name="target">The <see cref="T:HdrHistogram.Utilities.ByteBuffer"/> that will be written to.</param>
+            <param name="source">The source <see cref="T:HdrHistogram.Utilities.ByteBuffer"/> to read the data from.</param>
+            <param name="targetOffset">The <paramref name="target"/> buffer's offset to start writing from.</param>
+            <returns>The number of bytes written.</returns>
+        </member>
+        <member name="M:HdrHistogram.Utilities.TypeHelper.GetConstructor(System.Type,System.Type[])">
+            <summary>
+            Gets the constructor that matches the parameter array.
+            Searches for a public instance constructor whose parameters match the types in the specified array.
+            </summary>
+            <param name="type">The type to search.</param>
+            <param name="ctorArgTypes">An array of <see cref="T:System.Type"/> objects representing the number, order and type of the parameters for the desired constructor.</param>
+            <returns>The <see cref="T:System.Reflection.ConstructorInfo"/> if a match is found, else <c>null</c>.</returns>
+            <remarks>
+            In most versions of .NET this method is provided directly on <see cref="T:System.Type"/>, however for full support, we provide this ourselves.
+            </remarks>
+        </member>
+        <member name="T:HdrHistogram.Utilities.UnixTimeExtensions">
+            <summary>
+            Provides helper methods for working with times in Unix Epoch convention.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.Utilities.UnixTimeExtensions.SecondsSinceUnixEpoch(System.DateTime)">
+            <summary>
+            Gets the seconds elapsed since the Unix Epoch (01-Jan-1970 UTC)
+            </summary>
+            <param name="source">The source time.</param>
+            <returns>Returns the number whole and partial seconds elapsed since the Unix Epoch until the <paramref name="source"/> time.</returns>
+            <exception cref="T:System.ArgumentException">Thrown if the <paramref name="source"/> Kind is <see cref="F:System.DateTimeKind.Unspecified"/>.</exception>
+        </member>
+        <member name="M:HdrHistogram.Utilities.UnixTimeExtensions.MillisecondsSinceUnixEpoch(System.DateTime)">
+            <summary>
+            Gets the milliseconds elapsed since the Unix Epoch (01-Jan-1970 UTC)
+            </summary>
+            <param name="source">The source time.</param>
+            <returns>Returns the number whole milliseconds elapsed since the Unix Epoch until the <paramref name="source"/> time.</returns>
+            <exception cref="T:System.ArgumentException">Thrown if the <paramref name="source"/> Kind is <see cref="F:System.DateTimeKind.Unspecified"/>.</exception>
+        </member>
+        <member name="M:HdrHistogram.Utilities.UnixTimeExtensions.ToDateFromSecondsSinceEpoch(System.Double)">
+            <summary>
+            Returns the date and time specified by the seconds since the Unix Epoch
+            </summary>
+            <param name="secondsSinceUnixEpoch">The seconds since epoch</param>
+            <returns>A DateTime value in UTC kind.</returns>
+        </member>
+        <member name="M:HdrHistogram.Utilities.UnixTimeExtensions.ToDateFromMillisecondsSinceEpoch(System.Int64)">
+            <summary>
+            Returns the date and time specified by the milliseconds since the Unix Epoch
+            </summary>
+            <param name="millisecondsSinceUnixEpoch">The milliseconds since epoch</param>
+            <returns>A DateTime value in UTC kind.</returns>
+        </member>
+        <member name="T:HdrHistogram.Utilities.WriterReaderPhaser">
+            <summary>
+            <see cref="T:HdrHistogram.Utilities.WriterReaderPhaser"/> instances provide an asymmetric means for synchronizing the execution of wait-free "writer" critical sections against a "reader phase flip" that needs to make sure no writer critical sections that were active at the beginning of the flip are still active after the flip is done.
+            Multiple writers and multiple readers are supported.
+            </summary>
+            <remarks>
+            <para>
+            While a<see cref="T:HdrHistogram.Utilities.WriterReaderPhaser"/> can be useful in multiple scenarios, a specific and common use case is that of safely managing "double buffered" data stream access.
+            This style of access allows writers to proceed without being blocked, while readers gain access to stable and unchanging buffer samples
+            </para>
+            
+            <blockquote>
+            NOTE: <see cref="T:HdrHistogram.Utilities.WriterReaderPhaser" /> writers are wait-free on architectures that support wait-free atomic increment operations.
+            They remain lock-free (but not wait-free) on architectures that do not support wait-free atomic increment operations.
+            </blockquote>
+            <see cref="T:HdrHistogram.Utilities.WriterReaderPhaser"/> "writers" are wait free, "readers" block for other "readers", and "readers" are only blocked by "writers" whose critical was entered before the reader's <seealso cref="M:HdrHistogram.Utilities.WriterReaderPhaser.FlipPhase"/> attempt.
+            <para>
+            When used to protect an actively recording data structure, the assumptions on how readers and writers act are:
+            <ol>
+            <li>There are two sets of data structures("active" and "inactive")</li>
+            <li>Writing is done to the perceived active version(as perceived by the writer), and only within critical sections delineated by <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.WriterCriticalSectionEnter"/> and <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.WriterCriticalSectionExit(System.Int64)"/>).</li>
+            <li> Only readers switch the perceived roles of the active and inactive data structures.
+            They do so only while under <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.ReaderLock"/>, and only before calling <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.FlipPhase"/>.</li>
+            </ol>
+            When the above assumptions are met, <see cref="T:HdrHistogram.Utilities.WriterReaderPhaser"/> guarantees that the inactive data structures are not being modified by any writers while being read while under <seealso cref="M:HdrHistogram.Utilities.WriterReaderPhaser.ReaderLock"/> protection after a <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.FlipPhase"/> operation.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:HdrHistogram.Utilities.WriterReaderPhaser.WriterCriticalSectionEnter">
+            <summary>
+            Indicate entry to a critical section containing a write operation.
+            </summary>
+            <returns>
+            an (opaque) value associated with the critical section entry, 
+            which MUST be provided to the matching <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.WriterCriticalSectionExit(System.Int64)"/> call.
+            </returns>
+            <remarks>
+            <para>
+            This call is wait-free on architectures that support wait free atomic increment operations,
+            and is lock-free on architectures that do not.
+            </para>
+            <para>
+            <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.WriterCriticalSectionEnter"/> must be matched with a subsequent <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.WriterCriticalSectionExit(System.Int64)"/>
+            in order for CriticalSectionPhaser synchronization to function properly.
+            </para>
+            <para>
+            The <seealso cref="T:System.IDisposable"/> pattern could have been used but was not due to the high allocation count it would have incurred.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:HdrHistogram.Utilities.WriterReaderPhaser.WriterCriticalSectionExit(System.Int64)">
+            <summary>
+            Indicate exit from a critical section containing a write operation.
+            </summary>
+            <param name="criticalValueAtEnter">the opaque value (token) returned from the matching <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.WriterCriticalSectionEnter"/> call.</param>
+            <remarks>
+            This call is wait-free on architectures that support wait free atomic increment operations, and is lock-free on architectures that do not.
+            <para>
+            <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.WriterCriticalSectionExit(System.Int64)"/> must be matched with a preceding  <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.WriterCriticalSectionEnter"/> call, and must be provided with the matching <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.WriterCriticalSectionEnter"/> call's return value, in order for CriticalSectionPhaser synchronization to function properly.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:HdrHistogram.Utilities.WriterReaderPhaser.ReaderLock">
+            <summary>
+            Enter to a critical section containing a read operation (mutually excludes against other <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.ReaderLock"/> calls).
+            <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.ReaderLock"/> DOES NOT provide synchronization against <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.WriterCriticalSectionEnter"/> calls.
+            Use <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.FlipPhase"/> to synchronize reads against writers.
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.Utilities.WriterReaderPhaser.ReaderUnlock">
+            <summary>
+            Exit from a critical section containing a read operation(relinquishes mutual exclusion against other <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.ReaderLock"/> calls).
+            </summary>
+        </member>
+        <member name="M:HdrHistogram.Utilities.WriterReaderPhaser.FlipPhase(System.TimeSpan)">
+            <summary>
+            Flip a phase in the <see cref="T:HdrHistogram.Utilities.WriterReaderPhaser"/> instance, <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.FlipPhase(System.TimeSpan)"/> can only be called while holding the <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.ReaderLock"/>.
+            </summary>
+            <param name="yieldPeriod">The amount of time to sleep in each yield if yield loop is needed.</param>
+            <remarks>
+            <seealso cref="M:HdrHistogram.Utilities.WriterReaderPhaser.FlipPhase(System.TimeSpan)"/> will return only after all writer critical sections (protected by <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.WriterCriticalSectionEnter"/> and <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.WriterCriticalSectionExit(System.Int64)"/> that may have been in flight when the <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.FlipPhase(System.TimeSpan)"/> call were made had completed.
+            <para>
+            No actual writer critical section activity is required for <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.FlipPhase(System.TimeSpan)"/> to succeed.
+            </para>
+            <para>
+            However, <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.FlipPhase(System.TimeSpan)"/> is lock-free with respect to calls to <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.WriterCriticalSectionEnter"/> and <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.WriterCriticalSectionExit(System.Int64)"/>. 
+            It may spin-wait for for active writer critical section code to complete.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:HdrHistogram.Utilities.WriterReaderPhaser.FlipPhase">
+            <summary>
+            Flip a phase in the <see cref="T:HdrHistogram.Utilities.WriterReaderPhaser"/> instance, <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.FlipPhase"/> can only be called while holding the <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.ReaderLock"/>.
+            </summary>
+            <remarks>
+            <seealso cref="M:HdrHistogram.Utilities.WriterReaderPhaser.FlipPhase"/> will return only after all writer critical sections (protected by <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.WriterCriticalSectionEnter"/> and <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.WriterCriticalSectionExit(System.Int64)"/> that may have been in flight when the <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.FlipPhase(System.TimeSpan)"/> call were made had completed.
+            <para>
+            No actual writer critical section activity is required for <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.FlipPhase"/> to succeed.
+            </para>
+            <para>
+            However, <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.FlipPhase"/> is lock-free with respect to calls to <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.WriterCriticalSectionEnter"/> and <see cref="M:HdrHistogram.Utilities.WriterReaderPhaser.WriterCriticalSectionExit(System.Int64)"/>. 
+            It may spin-wait for for active writer critical section code to complete.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:HdrHistogram.ZigZagEncoding">
+            <summary>
+            Exposes methods to write values to a <see cref="T:HdrHistogram.Utilities.ByteBuffer"/> with ZigZag LEB128-64b9B-variant encoding.
+            (Little Endian Base128 Encoding, 64bit value store as a maximum of 9Bytes)
+            </summary>
+            <remarks>
+            <p>
+            This class provides encoding and decoding methods for writing and reading ZigZag-encoded LEB128-64b9B-variant(Little Endian Base 128) values to/from a <see cref="T:HdrHistogram.Utilities.ByteBuffer"/>.
+            LEB128's variable length encoding provides for using a smaller number of bytes for smaller values, and the use of ZigZag encoding allows small(closer to zero) negative values to use fewer bytes.
+            Details on both LEB128 and ZigZag can be readily found elsewhere.
+            </p>
+            <p>
+            The LEB128-64b9B-variant encoding used here diverges from the "original" LEB128 as it extends to 64 bit values.
+            In the original LEB128, a 64 bit value can take up to 10 bytes in the stream, where this variant's encoding of a 64 bit values will max out at 9 bytes.
+            As such, this encoder/decoder should NOT be used for encoding or decoding "standard" LEB128 formats (e.g.Google Protocol Buffers).
+            </p>
+            <p>
+            ZigZag Encoding explained here - https://gist.github.com/mfuerstenau/ba870a29e16536fdbaba
+            LEB128 explained here - https://en.wikipedia.org/wiki/LEB128
+            </p>
+            </remarks>
+        </member>
+        <member name="M:HdrHistogram.ZigZagEncoding.PutLong(HdrHistogram.Utilities.ByteBuffer,System.Int64)">
+            <summary>
+            Writes a 64 bit integer (<see cref="T:System.Int64"/>) value to the given buffer in LEB128-64b9B-variant ZigZag encoded format.
+            </summary>
+            <param name="buffer">The buffer to write to.</param>
+            <param name="value">The value to write to the buffer.</param>
+        </member>
+        <member name="M:HdrHistogram.ZigZagEncoding.GetLong(HdrHistogram.Utilities.ByteBuffer)">
+            <summary>
+            Reads an LEB128-64b9B ZigZag encoded 64 bit integer (<see cref="T:System.Int64"/>) value from the given buffer.
+            </summary>
+            <param name="buffer">The buffer to read from.</param>
+            <returns>The value read from the buffer.</returns>
+        </member>
+    </members>
+</doc>

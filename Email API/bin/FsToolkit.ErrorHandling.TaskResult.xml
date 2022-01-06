@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doc>
+<assembly><name>FsToolkit.ErrorHandling.TaskResult</name></assembly>
+<members>
+<member name="M:FsToolkit.ErrorHandling.Task.zip``2(System.Threading.Tasks.Task{``0},System.Threading.Tasks.Task{``1})">
+<summary>
+ Takes two tasks and returns a tuple of the pair
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResult.zip``3(System.Threading.Tasks.Task{Microsoft.FSharp.Core.FSharpResult{``0,``1}},System.Threading.Tasks.Task{Microsoft.FSharp.Core.FSharpResult{``2,``1}})">
+<summary>
+ Takes two results and returns a tuple of the pair
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResult.teeErrorIf``2(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},System.Threading.Tasks.Task{Microsoft.FSharp.Core.FSharpResult{``1,``0}})">
+<summary>
+ If the task-wrapped result is Error and the predicate returns true,
+ executes the function on the Error value. Passes through the input value.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResult.teeError``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},System.Threading.Tasks.Task{Microsoft.FSharp.Core.FSharpResult{``1,``0}})">
+<summary>
+ If the task-wrapped result is Error, executes the function on the Error
+ value. Passes through the input value.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResult.teeIf``2(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},System.Threading.Tasks.Task{Microsoft.FSharp.Core.FSharpResult{``0,``1}})">
+<summary>
+ If the task-wrapped result is Ok and the predicate returns true, executes
+ the function on the Ok value. Passes through the input value.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResult.tee``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},System.Threading.Tasks.Task{Microsoft.FSharp.Core.FSharpResult{``0,``1}})">
+<summary>
+ If the task-wrapped result is Ok, executes the function on the Ok value.
+ Passes through the input value.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResult.ignoreError``1(System.Threading.Tasks.Task{Microsoft.FSharp.Core.FSharpResult{Microsoft.FSharp.Core.Unit,``0}})">
+<summary>
+ Same as defaultValue for a result where the Ok value is unit. The name
+ describes better what is actually happening in this case.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResult.defaultWith``2(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,``0},System.Threading.Tasks.Task{Microsoft.FSharp.Core.FSharpResult{``0,``1}})">
+<summary>
+ Extracts the contained value of an task-wrapped result if Ok, otherwise
+ evaluates ifErrorThunk and uses the result.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResult.defaultValue``2(``0,System.Threading.Tasks.Task{Microsoft.FSharp.Core.FSharpResult{``0,``1}})">
+<summary>
+ Extracts the contained value of an task-wrapped result if Ok, otherwise
+ uses ifError.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResult.withError``2(``0,System.Threading.Tasks.Task{Microsoft.FSharp.Core.FSharpResult{``1,Microsoft.FSharp.Core.Unit}})">
+<summary>
+ Replaces a unit error value of an task-wrapped result with a custom
+ error value. Safer than setError since you&apos;re not losing any information.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResult.setError``3(``0,System.Threading.Tasks.Task{Microsoft.FSharp.Core.FSharpResult{``1,``2}})">
+<summary>
+ Replaces an error value of an task-wrapped result with a custom error
+ value.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResult.requireHead``3(``0,System.Threading.Tasks.Task{``1})">
+<summary>
+ Returns the first item of the task-wrapped sequence if it exists, or the specified
+ error if the sequence is empty
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResult.requireNotEmpty``3(``0,System.Threading.Tasks.Task{``1})">
+<summary>
+ Returns Ok if the task-wrapped sequence is not-empty, or the specified error if not.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResult.requireEmpty``3(``0,System.Threading.Tasks.Task{``1})">
+<summary>
+ Returns Ok if the task-wrapped sequence is empty, or the specified error if not.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResult.requireEqualTo``2(``0,``1,System.Threading.Tasks.Task{``0})">
+<summary>
+ Returns Ok if the two values are equal, or the specified error if not.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResult.requireEqual``2(``0,System.Threading.Tasks.Task{``0},``1)">
+<summary>
+ Returns Ok if the task-wrapped value and the provided value are equal, or the specified error if not.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResult.requireFalse``1(``0,System.Threading.Tasks.Task{System.Boolean})">
+<summary>
+ Returns the specified error if the task-wrapped value is true.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResult.requireTrue``1(``0,System.Threading.Tasks.Task{System.Boolean})">
+<summary>
+ Returns the specified error if the task-wrapped value is false.
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResult.ignore``2(System.Threading.Tasks.Task{Microsoft.FSharp.Core.FSharpResult{``0,``1}})">
+<summary>
+ Replaces the wrapped value with unit
+</summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResultCEExtensions.TaskResultBuilder.Source``1(FsToolkit.ErrorHandling.TaskResultCE.TaskResultBuilder,System.Threading.Tasks.Task)">
+ <summary>
+ Method lets us transform data types into our internal representation.
+ </summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResultCEExtensions.TaskResultBuilder.Source``2(FsToolkit.ErrorHandling.TaskResultCE.TaskResultBuilder,System.Threading.Tasks.Task{``0})">
+ <summary>
+ Method lets us transform data types into our internal representation.
+ </summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResultCEExtensions.TaskResultBuilder.Source``2(FsToolkit.ErrorHandling.TaskResultCE.TaskResultBuilder,Microsoft.FSharp.Control.FSharpAsync{``0})">
+ <summary>
+ Method lets us transform data types into our internal representation.
+ </summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResultCEExtensions.TaskResultBuilder.Source``2(FsToolkit.ErrorHandling.TaskResultCE.TaskResultBuilder,Microsoft.FSharp.Core.FSharpChoice{``0,``1})">
+ <summary>
+ Method lets us transform data types into our internal representation.
+ </summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResultCEExtensions.TaskResultBuilder.Source``2(FsToolkit.ErrorHandling.TaskResultCE.TaskResultBuilder,Microsoft.FSharp.Core.FSharpResult{``0,``1})">
+ <summary>
+ Method lets us transform data types into our internal representation.
+ </summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResultCEExtensions.TaskResultBuilder.Source``2(FsToolkit.ErrorHandling.TaskResultCE.TaskResultBuilder,``0)">
+ <summary>
+ Needed to allow `for..in` and `for..do` functionality
+ </summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResultCE.TaskResultBuilder.Source``2(Microsoft.FSharp.Control.FSharpAsync{Microsoft.FSharp.Core.FSharpResult{``0,``1}})">
+ <summary>
+ Method lets us transform data types into our internal representation.  
+ </summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResultCE.TaskResultBuilder.Source``2(System.Threading.Tasks.Task{Microsoft.FSharp.Core.FSharpResult{``0,``1}})">
+ <summary>
+ Method lets us transform data types into our internal representation. This is the identity method to recognize the self type.
+
+ See https://stackoverflow.com/questions/35286541/why-would-you-use-builder-source-in-a-custom-computation-expression-builder
+ </summary>
+</member>
+<member name="M:FsToolkit.ErrorHandling.TaskResultOption.ignore``2(System.Threading.Tasks.Task{Microsoft.FSharp.Core.FSharpResult{Microsoft.FSharp.Core.FSharpOption{``0},``1}})">
+<summary>
+ Replaces the wrapped value with unit
+</summary>
+</member>
+</members>
+</doc>

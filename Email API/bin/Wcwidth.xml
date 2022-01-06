@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Wcwidth</name>
+    </assembly>
+    <members>
+        <member name="T:Wcwidth.Unicode">
+            <summary>
+            Represents a Unicode version.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_4_1_0">
+            <summary>
+            Unicode version 4.1.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_5_0_0">
+            <summary>
+            Unicode version 5.0.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_5_1_0">
+            <summary>
+            Unicode version 5.1.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_5_2_0">
+            <summary>
+            Unicode version 5.2.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_6_0_0">
+            <summary>
+            Unicode version 6.0.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_6_1_0">
+            <summary>
+            Unicode version 6.1.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_6_2_0">
+            <summary>
+            Unicode version 6.2.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_6_3_0">
+            <summary>
+            Unicode version 6.3.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_7_0_0">
+            <summary>
+            Unicode version 7.0.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_8_0_0">
+            <summary>
+            Unicode version 8.0.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_9_0_0">
+            <summary>
+            Unicode version 9.0.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_10_0_0">
+            <summary>
+            Unicode version 10.0.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_11_0_0">
+            <summary>
+            Unicode version 11.0.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_12_0_0">
+            <summary>
+            Unicode version 12.0.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_12_1_0">
+            <summary>
+            Unicode version 12.1.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_13_0_0">
+            <summary>
+            Unicode version 13.0.0.
+            </summary>
+        </member>
+        <member name="T:Wcwidth.UnicodeCalculator">
+            <summary>
+            A utility for calculating the width of Unicode characters.
+            </summary>
+        </member>
+        <member name="M:Wcwidth.UnicodeCalculator.GetWidth(System.Char,System.Nullable{Wcwidth.Unicode})">
+            <summary>
+            Gets the width for a Unicode character.
+            </summary>
+            <param name="value">The charachter to calculate the width for.</param>
+            <param name="version">The Unicode version to use.</param>
+            <returns>The width of the character.</returns>
+        </member>
+    </members>
+</doc>
